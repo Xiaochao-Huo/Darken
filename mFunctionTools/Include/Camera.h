@@ -1,6 +1,5 @@
 #pragma once
 
-#include "glm.hpp"
 #include "Transform.h"
 
 class Camera
@@ -8,85 +7,68 @@ class Camera
 public:
 	Camera();
 	~Camera();
-	Camera(glm::vec3 position,
-		glm::vec3 eulerAngle,
-		glm::float32 fovy,
-		glm::float32 aspect,
-		glm::float32 nearPlane,
-		glm::float32 farPlane,
-		glm::ivec2 viewPortSize
-		);
-	void Init(glm::vec3 position,
-		glm::vec3 eulerAngle,
-		glm::float32 fovy,
-		glm::float32 aspect,
-		glm::float32 nearPlane,
-		glm::float32 farPlane,
-		glm::ivec2 viewPortSize);
-	void ModifyProjectionForClipping(glm::vec4 vClipPlane);
+	Camera(Vector3f position, Vector3f eulerAngle, Float32 fovy, Float32 aspect, Float32 nearPlane, Float32 farPlane, Vector2i viewPortSize);
+	void Init(Vector3f position, Vector3f eulerAngle, Float32 fovy, Float32 aspect, Float32 nearPlane, Float32 farPlane, Vector2i viewPortSize);
+	//void ModifyProjectionForClipping(Vector4f vClipPlane);
 
-	glm::mat4 GetViewMatrix();
-	glm::mat4 GetViewMatrix_PreFrame();
-	glm::mat4 GetProjectMatrix_PreFrame();
-	glm::mat4 GetProjectMatrix();
-	glm::mat4 GetVPMatrix();
-	glm::mat4 GetVPMatrix_I();
-	glm::vec3 GetEulerAngle();
-	glm::vec3 GetPosition();
-	glm::vec3 GetForward();
-	glm::vec3 GetUpward();
-	glm::vec3 GetLeftward();
-	float GetFOVinRadians();
-	float GetAspect();
-	float GetFarClipPlaneDis();
-	float GetNearClipPlaneDis();
-	glm::ivec2 GetViewPortSize();
-	void SetPosition(glm::vec3 position);
-	void SetPosition(glm::float32 x, glm::float32 y, glm::float32 z);
-	void SetEulerAngle(glm::vec3 eulerAngle);
-	void SetEulerAngle(glm::float32 x, glm::float32 y, glm::float32 z);
-	void SetFovy(glm::float32 fovy);
-	void SetAspect(glm::float32 aspect);
-	void SetNearPlaneDis(glm::float32 nearDis);
-	void SetFarPlaneDis(glm::float32 farDis);
-	void SetProjectMatrix(glm::mat4 newMatrix);
-	void SetViewMatrix_PreFrame(glm::mat4 newMatrix);
-	void SetProjectMatrix_PreFrame(glm::mat4 newMatrix);
+	Mat4f GetViewMatrix();
+	Mat4f GetViewMatrix_PreFrame();
+	Mat4f GetProjectMatrix_PreFrame();
+	Mat4f GetProjectMatrix();
+	Mat4f GetVPMatrix();
+	Mat4f GetVPMatrix_I();
+	Vector3f GetEulerAngle();
+	Vector3f GetPosition();
+	Vector3f GetForward();
+	Vector3f GetUpward();
+	Vector3f GetLeftward();
+	Float32 GetFOVinRadians();
+	Float32 GetAspect();
+	Float32 GetFarClipPlaneDis();
+	Float32 GetNearClipPlaneDis();
+	Vector2i GetViewPortSize();
+	void SetPosition(Vector3f position);
+	void SetPosition(Float32 x, Float32 y, Float32 z);
+	void SetEulerAngle(Vector3f eulerAngle);
+	void SetEulerAngle(Float32 x, Float32 y, Float32 z);
+	void SetFovy(Float32 fovy);
+	void SetAspect(Float32 aspect);
+	void SetNearPlaneDis(Float32 nearDis);
+	void SetFarPlaneDis(Float32 farDis);
+	void SetProjectMatrix(Mat4f newMatrix);
+	void SetViewMatrix_PreFrame(Mat4f newMatrix);
+	void SetProjectMatrix_PreFrame(Mat4f newMatrix);
 	void ReCalculateProjectMatrix();
-	void SetDirection(const glm::vec3& forward, const glm::vec3& up);
+	void SetDirection(const Vector3f& forward, const Vector3f& up);
 
 	void ActiveViewPort();
 
 	void SetNextCamera(std::shared_ptr<Camera> camera);
 	std::shared_ptr<Camera> GetNextCamera();
 private:
-	//glm::vec3 Position;
-	//glm::vec3 EulerAngle;
-	glm::float32 Fovy;
-	glm::float32 Aspect;
-	glm::float32 NearPlane;
-	glm::float32 FarPlane;
-	//glm::vec3 Forward;
-	//glm::vec3 Up;
-	//glm::vec3 Left;
 
-	glm::vec2 ViewPortSize;
+	Float32 Fovy;
+	Float32 Aspect;
+	Float32 NearPlane;
+	Float32 FarPlane;
+
+	Vector2i ViewPortSize;
 
 	void CreateViewMatrix();
 	void CreateProjectionMatrix();
 	void CreateVPMatrix();
-	//glm::mat4 RotationMatrix;
-	glm::mat4 ViewMatrix;
-	glm::mat4 ProjectMatrix;
-	glm::mat4 VPMatrix;
-	glm::mat4 VPMatrix_I;
 
-	glm::mat4 ViewMatrix_PreFrame;
-	glm::mat4 ProjectMatrix_PreFrame;
+	Mat4f ViewMatrix;
+	Mat4f ProjectMatrix;
+	Mat4f VPMatrix;
+	Mat4f VPMatrix_I;
+
+	Mat4f ViewMatrix_PreFrame;
+	Mat4f ProjectMatrix_PreFrame;
 
 	Transform CameraTransform;
 
-	float sgn(float a);
+	Float32 sgn(Float32 a);
 
 	std::shared_ptr<Camera> NextCamera;
 };

@@ -13,26 +13,14 @@ Camera::~Camera()
 {
 }
 
-Camera::Camera(glm::vec3 position, 
-	glm::vec3 eulerAngle, 
-	glm::float32 fovy, 
-	glm::float32 aspect, 
-	glm::float32 nearPlane, 
-	glm::float32 farPlane, 
-	glm::ivec2 viewPortSize)
+Camera::Camera(Vector3f position, Vector3f eulerAngle, Float32 fovy, Float32 aspect, Float32 nearPlane, Float32 farPlane, Vector2i viewPortSize)
 {
 	Init(position, eulerAngle, fovy, aspect, nearPlane, farPlane, viewPortSize);
 }
 
-void Camera::Init(glm::vec3 position,
-	glm::vec3 eulerAngle,
-	glm::float32 fovy,
-	glm::float32 aspect,
-	glm::float32 nearPlane,
-	glm::float32 farPlane,
-	glm::ivec2 viewPortSize)
+void Camera::Init(Vector3f position, Vector3f eulerAngle, Float32 fovy, Float32 aspect, Float32 nearPlane, Float32 farPlane, Vector2i viewPortSize)
 {
-	CameraTransform.SetTransform(position, eulerAngle, glm::vec3(1.0));
+	CameraTransform.SetTransform(position, eulerAngle, Vector3f(1.0));
 	ViewPortSize = viewPortSize;
 	Fovy = fovy;
 	Aspect = aspect;
@@ -47,13 +35,13 @@ void Camera::Init(glm::vec3 position,
 
 void Camera::CreateViewMatrix()
 {
-	glm::mat4 viewMatrix = glm::mat4(1.0);
-	ViewMatrix = glm::lookAtLH(CameraTransform.GetPosition(), CameraTransform.GetPosition() + CameraTransform.GetForward(), CameraTransform.GetUpward());
+	Mat4f viewMatrix = Mat4f(1.0);
+	ViewMatrix = CameraUtil::LookAt(CameraTransform.GetPosition(), CameraTransform.GetPosition() + CameraTransform.GetForward(), CameraTransform.GetUpward());
 }
 
 void Camera::CreateProjectionMatrix()
 {
-	ProjectMatrix = glm::perspectiveLH(Fovy,
+	ProjectMatrix = CameraUtil::Perspective(Fovy,
 		Aspect,
 		NearPlane,
 		FarPlane
@@ -64,32 +52,32 @@ void Camera::CreateProjectionMatrix()
 void Camera::CreateVPMatrix()
 {
 	VPMatrix = ProjectMatrix * ViewMatrix;
-	VPMatrix_I = glm::inverse(VPMatrix);
+	VPMatrix_I = Math::Inverse(VPMatrix);
 }
 
-void Camera::ModifyProjectionForClipping(glm::vec4 vClipPlane)
-{
-	glm::vec4 vClipPlaneView(vClipPlane * glm::inverse(ViewMatrix));	// put clip plane into view coords
-	/*
-	Calculate the clip-space corner point opposite the clipping plane
-	and transform it into camera space by multiplying it by the inverse
-	projection matrix.
-	*/
-	glm::vec4 vClipSpaceCorner(sgn(vClipPlaneView.x), sgn(vClipPlaneView.y), 1.0f, 1.0f);
-	vClipSpaceCorner = vClipSpaceCorner * glm::inverse(ProjectMatrix);
+//void Camera::ModifyProjectionForClipping(Vector4f vClipPlane)
+//{
+//	Vector4f vClipPlaneView(vClipPlane * Math::Inverse(ViewMatrix));	// put clip plane into view coords
+//	/*
+//	Calculate the clip-space corner point opposite the clipping plane
+//	and transform it into camera space by multiplying it by the inverse
+//	projection matrix.
+//	*/
+//	Vector4f vClipSpaceCorner(sgn(vClipPlaneView.x), sgn(vClipPlaneView.y), 1.0f, 1.0f);
+//	vClipSpaceCorner = vClipSpaceCorner * Math::Inverse(ProjectMatrix);
+//
+//	// Calculate the scaled plane vector
+//	Vector4f vScaledPlane = vClipPlaneView * (2.0f / glm::dot(vClipSpaceCorner, vClipPlaneView));
+//
+//	// Replace the third row of the matrix
+//	glm::value_ptr(ProjectMatrix)[2] = vScaledPlane.x;
+//	glm::value_ptr(ProjectMatrix)[6] = vScaledPlane.y;
+//	glm::value_ptr(ProjectMatrix)[10] = vScaledPlane.z + 1.0f;
+//	glm::value_ptr(ProjectMatrix)[14] = vScaledPlane.w;
+//	CreateVPMatrix();
+//}
 
-	// Calculate the scaled plane vector
-	glm::vec4 vScaledPlane = vClipPlaneView * (2.0f / glm::dot(vClipSpaceCorner, vClipPlaneView));
-
-	// Replace the third row of the matrix
-	glm::value_ptr(ProjectMatrix)[2] = vScaledPlane.x;
-	glm::value_ptr(ProjectMatrix)[6] = vScaledPlane.y;
-	glm::value_ptr(ProjectMatrix)[10] = vScaledPlane.z + 1.0f;
-	glm::value_ptr(ProjectMatrix)[14] = vScaledPlane.w;
-	CreateVPMatrix();
-}
-
-void Camera::SetPosition(glm::vec3 position)
+void Camera::SetPosition(Vector3f position)
 {
 	
 
@@ -99,16 +87,16 @@ void Camera::SetPosition(glm::vec3 position)
 	CreateVPMatrix();
 }
 
-void Camera::SetPosition(glm::float32 x, glm::float32 y, glm::float32 z)
+void Camera::SetPosition(Float32 x, Float32 y, Float32 z)
 {
-	glm::vec3 newPosition(x, y, z);
+	Vector3f newPosition(x, y, z);
 	if (CameraTransform.GetPosition() == newPosition) return;
 	CameraTransform.SetPosition(newPosition);
 	CreateViewMatrix();
 	CreateVPMatrix();	
 }
 
-void Camera::SetEulerAngle(glm::vec3 eulerAngle)
+void Camera::SetEulerAngle(Vector3f eulerAngle)
 {
 	if (CameraTransform.GetEulerAngle() == eulerAngle) return;
 	CameraTransform.SetEulerAngle(eulerAngle);
@@ -116,60 +104,60 @@ void Camera::SetEulerAngle(glm::vec3 eulerAngle)
 	CreateVPMatrix();
 }
 
-void Camera::SetEulerAngle(glm::float32 x, glm::float32 y, glm::float32 z)
+void Camera::SetEulerAngle(Float32 x, Float32 y, Float32 z)
 {
-	glm::vec3 newEulerAngle(x, y, z);
+	Vector3f newEulerAngle(x, y, z);
 	if (CameraTransform.GetEulerAngle() == newEulerAngle) return;
 	CameraTransform.SetEulerAngle(newEulerAngle);
 	CreateViewMatrix();
 	CreateVPMatrix();
 }
 
-void Camera::SetFovy(glm::float32 fovy)
+void Camera::SetFovy(Float32 fovy)
 {
 	fovy = fovy;
 	CreateProjectionMatrix();
 	CreateVPMatrix();
 }
 
-void Camera::SetAspect(glm::float32 aspect)
+void Camera::SetAspect(Float32 aspect)
 {
 	aspect = aspect;
 	CreateProjectionMatrix();
 	CreateVPMatrix();
 }
 
-void Camera::SetNearPlaneDis(glm::float32 nearDis)
+void Camera::SetNearPlaneDis(Float32 nearDis)
 {
 	NearPlane = nearDis;
 	CreateProjectionMatrix();
 	CreateVPMatrix();
 }
 
-void Camera::SetFarPlaneDis(glm::float32 farDis)
+void Camera::SetFarPlaneDis(Float32 farDis)
 {
 	FarPlane = farDis;
 	CreateProjectionMatrix();
 	CreateVPMatrix();
 }
 
-void Camera::SetProjectMatrix(glm::mat4 newMatrix)
+void Camera::SetProjectMatrix(Mat4f newMatrix)
 {
 	ProjectMatrix = newMatrix;
 	CreateVPMatrix();
 }
 
-void Camera::SetViewMatrix_PreFrame(glm::mat4 newMatrix)
+void Camera::SetViewMatrix_PreFrame(Mat4f newMatrix)
 {
 	ViewMatrix_PreFrame = newMatrix;
 }
 
-void Camera::SetProjectMatrix_PreFrame(glm::mat4 newMatrix)
+void Camera::SetProjectMatrix_PreFrame(Mat4f newMatrix)
 {
 	ProjectMatrix_PreFrame = newMatrix;
 }
 
-void Camera::SetDirection(const glm::vec3& forward, const glm::vec3& up)
+void Camera::SetDirection(const Vector3f& forward, const Vector3f& up)
 {
 	CameraTransform.SetForward(forward);
 	CameraTransform.SetUpward(up);
@@ -177,77 +165,77 @@ void Camera::SetDirection(const glm::vec3& forward, const glm::vec3& up)
 	CreateVPMatrix();
 }
 
-glm::mat4 Camera::GetViewMatrix()
+Mat4f Camera::GetViewMatrix()
 {
 	return ViewMatrix;
 }
 
-glm::mat4 Camera::GetViewMatrix_PreFrame()
+Mat4f Camera::GetViewMatrix_PreFrame()
 {
 	return ViewMatrix_PreFrame;
 }
 
-glm::mat4 Camera::GetProjectMatrix()
+Mat4f Camera::GetProjectMatrix()
 {
 	return ProjectMatrix;
 }
 
-glm::mat4 Camera::GetProjectMatrix_PreFrame() 
+Mat4f Camera::GetProjectMatrix_PreFrame() 
 {
 	return ProjectMatrix_PreFrame;
 }
 
-glm::mat4 Camera::GetVPMatrix()
+Mat4f Camera::GetVPMatrix()
 {
 	return VPMatrix;
 }
 
-glm::mat4 Camera::GetVPMatrix_I()
+Mat4f Camera::GetVPMatrix_I()
 {
 	return VPMatrix_I;
 }
 
-glm::vec3 Camera::GetEulerAngle()
+Vector3f Camera::GetEulerAngle()
 {
 	return CameraTransform.GetEulerAngle();
 }
 
-glm::vec3 Camera::GetPosition()
+Vector3f Camera::GetPosition()
 {
 	return CameraTransform.GetPosition();
 }
 
-glm::vec3 Camera::GetForward()
+Vector3f Camera::GetForward()
 {
 	return CameraTransform.GetForward();
 }
 
-glm::vec3 Camera::GetUpward()
+Vector3f Camera::GetUpward()
 {
 	return CameraTransform.GetUpward();
 }
 
-glm::vec3 Camera::GetLeftward()
+Vector3f Camera::GetLeftward()
 {
 	return CameraTransform.GetLeftward();
 }
 
-float Camera::GetFOVinRadians()
+Float32 Camera::GetFOVinRadians()
 {
 	return Fovy;
 }
 
-float Camera::GetAspect()
+Float32 Camera::GetAspect()
 {
 	return Aspect;
 }
 
-float Camera::GetNearClipPlaneDis()
+Float32 Camera::GetNearClipPlaneDis()
 {
 	return NearPlane;
 }
 
-float Camera::GetFarClipPlaneDis()
+Float32 Camera::GetFarClipPlaneDis()
 {
 	return FarPlane;
 }
@@ -257,14 +245,14 @@ void Camera::ReCalculateProjectMatrix()
 	CreateProjectionMatrix();
 }
 
-float Camera::sgn(float a)
+Float32 Camera::sgn(Float32 a)
 {
 	if (a > 0.0f) return(1.0f);
 	if (a < 0.0f) return(-1.0f);
 	return 0.0f;
 }
 
-glm::ivec2 Camera::GetViewPortSize()
+Vector2i Camera::GetViewPortSize()
 {
 	return ViewPortSize;
 }

@@ -39,14 +39,14 @@ public:
 	void bind();
 	void unbind();
 
-	inline unsigned int getBufferHandle(unsigned char buffer) { return *getTextureHandle(buffer); }
+	inline UInt32 getBufferHandle(unsigned char buffer) { return *getTextureHandle(buffer); }
 
 private:
 	bool bufferIsColor(unsigned char buffer);
 	bool bufferIsDepth(unsigned char buffer);
 	bool bufferIsDepthStencil(unsigned char buffer);
 	bool bufferIsValid(unsigned char buffer);
-	unsigned int *getTextureHandle(unsigned char buffer);
+	UInt32 *getTextureHandle(unsigned char buffer);
 	GLenum getGLAttachment(unsigned char buffer);
 	void updateColorBuffers();
 
@@ -55,9 +55,9 @@ private:
 	GLenum *ColorBuffers;
 	unsigned char numColorBuffers;
 
-	unsigned int bufferHandle[6];
+	UInt32 bufferHandle[6];
 
-	unsigned int fboHandle;
+	UInt32 fboHandle;
 };
 
 /**

@@ -2,16 +2,20 @@
 #include "SceneManager.h"
 #include "BufferManager.h"
 #include "SystemTextures.h"
+#include "TypeDefine.h"
+#include "SystemTextures.h"
 
+using namespace dk;
 
 extern std::shared_ptr<SceneManager> _Scene;
 extern std::shared_ptr<BufferManager> _GPUBuffers;
 extern std::shared_ptr<SystemTextureFactory> GlobalTextures;
-extern const unsigned int _ScreenWidth;
-extern const unsigned int _ScreenHeight;
-//extern std::unordered_map<pvr::Keys, bool> InputKeyPressed;
+extern const UInt32 _ScreenWidth;
+extern const UInt32 _ScreenHeight;
+
+//extern std::unordered_map<pvr::Keys, Bool> InputKeyPressed;
 //extern std::vector<pvr::Keys> InputKeyRecord;
-extern unsigned int APP_DeltaTime;
+extern UInt32 APP_DeltaTime;
 extern unsigned long APP_FrameCount;
 //extern pvr::IAssetProvider* App;
 

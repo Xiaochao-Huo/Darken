@@ -1,6 +1,7 @@
 #pragma once
 
-#include "GlobalPram.h"
+#include "TypeDefine.h"
+#include "Util.h"
 #include <vector>
 
 
@@ -10,17 +11,17 @@ public:
 	Animation();
 	~Animation();
 
-	int GetNumFrames();
-	void SetPlaySpeed(float speed);
+	Int32 GetNumFrames();
+	void SetPlaySpeed(Float32 speed);
 	void Stop();
 	void Play();
-	void SetAttitudeMatrixes(const float * matrixData, int numFrames);
-	glm::mat4 GetNextFrameAttitudeMatrix();
+	void SetAttitudeMatrixes(const Float32 * matrixData, Int32 numFrames);
+	Mat4f GetNextFrameAttitudeMatrix();
 	
 private:
-	std::vector<glm::mat4> AttitudeMatrixes;
-	float CurrentFrame;
-	int NumFrames;
-	float Speed;
-	bool isPlay;
+	std::vector<Mat4f> AttitudeMatrixes;
+	Float32 CurrentFrame;
+	Int32 NumFrames;
+	Float32 Speed;
+	Bool isPlay;
 };

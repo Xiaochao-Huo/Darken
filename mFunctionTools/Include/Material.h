@@ -5,11 +5,11 @@
 #include <string>
 #include <typeinfo>
 #include <memory>
-#include <glm.hpp>
 #include <gtc/matrix_transform.hpp>
 #include <gtc/type_ptr.hpp>
 #include <glew.h>
 #include <map>
+#include "TypeDefine.h"
 
 enum ShaderType
 {
@@ -54,7 +54,7 @@ enum GLDrawType
 	OGL_LINE_STRIP
 };
 
-static std::unordered_map<unsigned int, UniformType> UniformTypeMap = {
+static std::unordered_map<UInt32, UniformType> UniformTypeMap = {
 	{ GL_INT,   UniformType::GLSL_INT },
 	{ GL_UNSIGNED_INT, UniformType::GLSL_UINT},
 	{ GL_FLOAT, UniformType::GLSL_FLOAT},
@@ -74,7 +74,7 @@ static std::unordered_map<unsigned int, UniformType> UniformTypeMap = {
 
 struct AttribItem
 {
-	int Location;
+	Int32 Location;
 	AttribItem() {}
 };
 
@@ -82,41 +82,41 @@ struct UniformItem_WithinBlock
 {
 	std::string Name;
 	UniformType DataType;
-	unsigned int Size;
-	int Offset_Byte;
+	UInt32 Size;
+	Int32 Offset_Byte;
 	UniformItem_WithinBlock() {}
 };
 
 struct UniformItem_Block
 {
-	int Id;
-	int HashCode;
-	unsigned int DataSize_Byte;
+	Int32 Id;
+	Int32 HashCode;
+	UInt32 DataSize_Byte;
 	void * DataPtr;
-	unsigned int Index;
-	std::map<long long, UniformItem_WithinBlock> Uniforms;
+	UInt32 Index;
+	std::map<UInt32, UniformItem_WithinBlock> Uniforms;
 };
 
 struct UniformItem_Basic
 {
-	int Location;
+	Int32 Location;
 	UniformType DataType;
-	unsigned int Size;
+	UInt32 Size;
 	void* DataPtr;
 	UniformItem_Basic() {}
 };
 
 struct UniformItem_Texture
 {
-	int Location;
-	unsigned int* IDPtr;
+	Int32 Location;
+	UInt32* IDPtr;
 	UniformType DataType;
 	UniformItem_Texture() : Location(-1) {}
 };
 
 struct Shader
 {
-	unsigned int Id;
+	UInt32 Id;
 	std::string Name;
 	ShaderType type;
 	Shader() {}
@@ -124,7 +124,7 @@ struct Shader
 
 struct Program
 {
-	unsigned int Id;
+	UInt32 Id;
 	std::vector<Shader> shaders;
 	std::unordered_map<std::string, AttribItem> Attribs;
 	std::unordered_map<std::string, std::shared_ptr<UniformItem_Block>> Uniforms_Block;
@@ -143,7 +143,7 @@ public:
 	void CreateMaterial(std::vector<std::string>& shaderNames);
 	Material(std::vector<std::string> shaderNames);
 
-	void Draw(unsigned int VAO, int NumFaces, IndexSizeType indexSize, int Offset = 0, GLDrawType drawType = GLDrawType::OGL_ELEMENT);
+	void Draw(UInt32 VAO, Int32 NumFaces, IndexSizeType indexSize, Int32 Offset = 0, GLDrawType drawType = GLDrawType::OGL_ELEMENT);
 	void BindProgram();
 	void UnBindProgram();
 	void BindUniforms();
@@ -155,6 +155,6 @@ private:
 	void FindAttibInfos();
 	void FindUniformInfos();
 	void LinkLocation();
-	unsigned int CreateShaderGPUObjFromSrcCode(std::string & Code, ShaderType type);
+	UInt32 CreateShaderGPUObjFromSrcCode(std::string & Code, ShaderType type);
 };
 

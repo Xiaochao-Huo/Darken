@@ -1,22 +1,22 @@
 #include "Transform.h"
 #include "Quaternion.h"
 
-Transform::Transform(glm::vec3 position, glm::vec3 eulerAngle, glm::vec3 scale)
+Transform::Transform(Vector3f position, Vector3f eulerAngle, Vector3f scale)
 {
-	Position = glm::vec3(position);
-	TranslationMatrix = glm::mat4(glm::translate(glm::mat4(1.0), position));
+	Position = Vector3f(position);
+	TranslationMatrix = Mat4f(Math::Translate(Mat4f(1.0), position));
 
-	EulerAngle = glm::vec3(eulerAngle);
-	RotationMatrix = glm::rotate(glm::mat4(1.0), glm::radians(eulerAngle.z), ORIGIN_UPWARD) * glm::rotate(glm::mat4(1.0), glm::radians(eulerAngle.x), ORIGIN_FORWARD) * glm::rotate(glm::mat4(1.0), glm::radians(eulerAngle.y), ORIGIN_LEFTWARD);
+	EulerAngle = Vector3f(eulerAngle);
+	RotationMatrix = Math::Rotate(Mat4f(1.0), Math::Radians(eulerAngle.z), ORIGIN_UPWARD) * Math::Rotate(Mat4f(1.0), Math::Radians(eulerAngle.x), ORIGIN_FORWARD) * Math::Rotate(Mat4f(1.0), Math::Radians(eulerAngle.y), ORIGIN_LEFTWARD);
 	
-	Scale = glm::vec3(scale);
-	ScaleMatrix = glm::scale(glm::mat4(1.0), scale);
+	Scale = Vector3f(scale);
+	ScaleMatrix = Math::Scale(Mat4f(1.0), scale);
 
-	Forward = glm::mat3(RotationMatrix) * ORIGIN_FORWARD;
+	Forward = Mat3f(RotationMatrix) * ORIGIN_FORWARD;
 	
-	Upward = glm::mat3(RotationMatrix) * ORIGIN_UPWARD;
+	Upward = Mat3f(RotationMatrix) * ORIGIN_UPWARD;
 	
-	Leftward = glm::mat3(RotationMatrix) * ORIGIN_LEFTWARD;
+	Leftward = Mat3f(RotationMatrix) * ORIGIN_LEFTWARD;
 
 	CalculateModelMatrix();
 	ModelMatrix_PreFrame = ModelMatrix;
@@ -24,14 +24,14 @@ Transform::Transform(glm::vec3 position, glm::vec3 eulerAngle, glm::vec3 scale)
 
 Transform::Transform()
 {
-	Position = glm::vec3(0.0, 0.0, 0.0);
-	TranslationMatrix = glm::mat4(1.0);
+	Position = Vector3f(0.0, 0.0, 0.0);
+	TranslationMatrix = Mat4f(1.0);
 
-	EulerAngle = glm::vec3(0.0, 0.0, 0.0);
-	RotationMatrix = glm::mat4(1.0);
+	EulerAngle = Vector3f(0.0, 0.0, 0.0);
+	RotationMatrix = Mat4f(1.0);
 
-	Scale = glm::vec3(1.0, 1.0, 1.0);
-	ScaleMatrix = glm::mat4(1.0);
+	Scale = Vector3f(1.0, 1.0, 1.0);
+	ScaleMatrix = Mat4f(1.0);
 	
 	Forward = ORIGIN_FORWARD;
 
@@ -43,22 +43,22 @@ Transform::Transform()
 	ModelMatrix_PreFrame = ModelMatrix;
 }
 
-void Transform::SetTransform(glm::vec3 position, glm::vec3 eulerAngle, glm::vec3 scale)
+void Transform::SetTransform(Vector3f position, Vector3f eulerAngle, Vector3f scale)
 {
-	Position = glm::vec3(position);
-	TranslationMatrix = glm::mat4(glm::translate(glm::mat4(1.0), position));
+	Position = Vector3f(position);
+	TranslationMatrix = Mat4f(Math::Translate(Mat4f(1.0), position));
 
-	EulerAngle = glm::vec3(eulerAngle);
-	RotationMatrix = glm::rotate(glm::mat4(1.0), glm::radians(eulerAngle.z), ORIGIN_UPWARD) * glm::rotate(glm::mat4(1.0), glm::radians(eulerAngle.x), ORIGIN_FORWARD) * glm::rotate(glm::mat4(1.0), glm::radians(eulerAngle.y), ORIGIN_LEFTWARD);
+	EulerAngle = Vector3f(eulerAngle);
+	RotationMatrix = Math::Rotate(Mat4f(1.0), Math::Radians(eulerAngle.z), ORIGIN_UPWARD) * Math::Rotate(Mat4f(1.0), Math::Radians(eulerAngle.x), ORIGIN_FORWARD) * Math::Rotate(Mat4f(1.0), Math::Radians(eulerAngle.y), ORIGIN_LEFTWARD);
 
-	Scale = glm::vec3(scale);
-	ScaleMatrix = glm::scale(glm::mat4(1.0), scale);
+	Scale = Vector3f(scale);
+	ScaleMatrix = Math::Scale(Mat4f(1.0), scale);
 
-	Forward = glm::mat3(RotationMatrix) * ORIGIN_FORWARD;
+	Forward = Mat3f(RotationMatrix) * ORIGIN_FORWARD;
 
-	Upward = glm::mat3(RotationMatrix) * ORIGIN_UPWARD;
+	Upward = Mat3f(RotationMatrix) * ORIGIN_UPWARD;
 
-	Leftward = glm::mat3(RotationMatrix) * ORIGIN_LEFTWARD;
+	Leftward = Mat3f(RotationMatrix) * ORIGIN_LEFTWARD;
 
 	CalculateModelMatrix();
 }
@@ -67,133 +67,133 @@ Transform::~Transform()
 {
 }
 
-void Transform::SetPosition(glm::vec3 position)
+void Transform::SetPosition(Vector3f position)
 {
 	if (Position == position) return;
 	Position = position;
-	TranslationMatrix = glm::translate(glm::mat4(1.0), position);
+	TranslationMatrix = Math::Translate(Mat4f(1.0), position);
 	CalculateModelMatrix();
 }
 
-void Transform::SetEulerAngle(glm::vec3 eulerAngle)
+void Transform::SetEulerAngle(Vector3f eulerAngle)
 {
 	if (EulerAngle == eulerAngle) return;
 	EulerAngle = eulerAngle;
-	RotationMatrix = glm::rotate(glm::mat4(1.0), glm::radians(eulerAngle.z), ORIGIN_UPWARD) * glm::rotate(glm::mat4(1.0), glm::radians(eulerAngle.x), ORIGIN_FORWARD) * glm::rotate(glm::mat4(1.0), glm::radians(eulerAngle.y), ORIGIN_LEFTWARD);
+	RotationMatrix = Math::Rotate(Mat4f(1.0), Math::Radians(eulerAngle.z), ORIGIN_UPWARD) * Math::Rotate(Mat4f(1.0), Math::Radians(eulerAngle.x), ORIGIN_FORWARD) * Math::Rotate(Mat4f(1.0), Math::Radians(eulerAngle.y), ORIGIN_LEFTWARD);
 	CalculateModelMatrix();
-	Forward = glm::mat3(RotationMatrix) * ORIGIN_FORWARD;
-	Upward = glm::mat3(RotationMatrix) * ORIGIN_UPWARD;
-	Leftward = glm::mat3(RotationMatrix) * ORIGIN_LEFTWARD;
+	Forward = Mat3f(RotationMatrix) * ORIGIN_FORWARD;
+	Upward = Mat3f(RotationMatrix) * ORIGIN_UPWARD;
+	Leftward = Mat3f(RotationMatrix) * ORIGIN_LEFTWARD;
 }
 
-void Transform::SetScale(glm::vec3 scale)
+void Transform::SetScale(Vector3f scale)
 {
 	if (Scale == scale) return;
 	Scale = scale;
-	ScaleMatrix = glm::scale(glm::mat4(1.0), scale);
+	ScaleMatrix = Math::Scale(Mat4f(1.0), scale);
 	CalculateModelMatrix();
 }
 
-void Transform::SetForward(glm::vec3 forward)
+void Transform::SetForward(Vector3f forward)
 {
 	if (Math::IsNearlyEqual(Forward, forward, 0.1f)) return;
-	glm::vec3 C = glm::cross(Forward, forward);
-	float angle = glm::degrees(glm::acos(glm::dot(Forward, forward) / (glm::length(Forward) * glm::length(forward))));
-	glm::mat4 newRotateMatrix = mQuaternion::AxisAngle(glm::radians(angle), C);
-	float EulerX = glm::degrees(std::atan2(newRotateMatrix[2][1], glm::sqrt(newRotateMatrix[2][0] * newRotateMatrix[2][0] + newRotateMatrix[2][2] * newRotateMatrix[2][2])));
-	float EulerY = glm::degrees(std::atan2(-newRotateMatrix[2][0] / glm::cos(glm::radians(EulerX)), newRotateMatrix[2][2] / glm::cos(glm::radians(EulerX))));
-	float EulerZ = glm::degrees(std::atan2(-newRotateMatrix[0][1] / glm::cos(glm::radians(EulerX)), newRotateMatrix[1][1] / glm::cos(glm::radians(EulerX))));
+	Vector3f C = Math::Cross(Forward, forward);
+	Float32 angle = Math::Degrees(Math::aCos(Math::Dot(Forward, forward) / (Math::Length(Forward) * Math::Length(forward))));
+	Mat4f newRotateMatrix = mQuaternion::AxisAngle(Math::Radians(angle), C);
+	Float32 EulerX = Math::Degrees(std::atan2(newRotateMatrix[2][1], Math::Sqrt(newRotateMatrix[2][0] * newRotateMatrix[2][0] + newRotateMatrix[2][2] * newRotateMatrix[2][2])));
+	Float32 EulerY = Math::Degrees(std::atan2(-newRotateMatrix[2][0] / Math::Cos(Math::Radians(EulerX)), newRotateMatrix[2][2] / Math::Cos(Math::Radians(EulerX))));
+	Float32 EulerZ = Math::Degrees(std::atan2(-newRotateMatrix[0][1] / Math::Cos(Math::Radians(EulerX)), newRotateMatrix[1][1] / Math::Cos(Math::Radians(EulerX))));
 
-	SetEulerAngle(glm::vec3(EulerX, -EulerY, EulerZ) + EulerAngle);
+	SetEulerAngle(Vector3f(EulerX, -EulerY, EulerZ) + EulerAngle);
 }
 
-void Transform::SetLeftward(glm::vec3 leftward)
+void Transform::SetLeftward(Vector3f leftward)
 {
 	if (Math::IsNearlyEqual(Leftward, leftward, 0.1f)) return;
-	glm::vec3 C = glm::cross(Leftward, leftward);
-	float angle = glm::degrees(glm::acos(glm::dot(Leftward, leftward) / (glm::length(Leftward) * glm::length(leftward))));
-	glm::mat4 newRotateMatrix = mQuaternion::AxisAngle(glm::radians(angle), C);
-	float EulerX = glm::degrees(std::atan2(newRotateMatrix[2][1], glm::sqrt(newRotateMatrix[2][0] * newRotateMatrix[2][0] + newRotateMatrix[2][2] * newRotateMatrix[2][2])));
-	float EulerY = glm::degrees(std::atan2(-newRotateMatrix[2][0] / glm::cos(glm::radians(EulerX)), newRotateMatrix[2][2] / glm::cos(glm::radians(EulerX))));
-	float EulerZ = glm::degrees(std::atan2(-newRotateMatrix[0][1] / glm::cos(glm::radians(EulerX)), newRotateMatrix[1][1] / glm::cos(glm::radians(EulerX))));
+	Vector3f C = Math::Cross(Leftward, leftward);
+	Float32 angle = Math::Degrees(Math::aCos(Math::Dot(Leftward, leftward) / (Math::Length(Leftward) * Math::Length(leftward))));
+	Mat4f newRotateMatrix = mQuaternion::AxisAngle(Math::Radians(angle), C);
+	Float32 EulerX = Math::Degrees(std::atan2(newRotateMatrix[2][1], Math::Sqrt(newRotateMatrix[2][0] * newRotateMatrix[2][0] + newRotateMatrix[2][2] * newRotateMatrix[2][2])));
+	Float32 EulerY = Math::Degrees(std::atan2(-newRotateMatrix[2][0] / Math::Cos(Math::Radians(EulerX)), newRotateMatrix[2][2] / Math::Cos(Math::Radians(EulerX))));
+	Float32 EulerZ = Math::Degrees(std::atan2(-newRotateMatrix[0][1] / Math::Cos(Math::Radians(EulerX)), newRotateMatrix[1][1] / Math::Cos(Math::Radians(EulerX))));
 
-	SetEulerAngle(glm::vec3(EulerX, -EulerY, EulerZ) + EulerAngle);
+	SetEulerAngle(Vector3f(EulerX, -EulerY, EulerZ) + EulerAngle);
 }
 
-void Transform::SetUpward(glm::vec3 upward)
+void Transform::SetUpward(Vector3f upward)
 {
 	if (Math::IsNearlyEqual(Upward, upward, 0.1f)) return;
-	glm::vec3 C = glm::cross(Upward, upward);
-	float angle = glm::degrees(glm::acos(glm::dot(Upward, upward) / (glm::length(Upward) * glm::length(upward))));
-	glm::mat4 newRotateMatrix = mQuaternion::AxisAngle(glm::radians(angle), C);
-	float EulerX = glm::degrees(std::atan2(newRotateMatrix[2][1], glm::sqrt(newRotateMatrix[2][0] * newRotateMatrix[2][0] + newRotateMatrix[2][2] * newRotateMatrix[2][2])));
-	float EulerY = glm::degrees(std::atan2(-newRotateMatrix[2][0] / glm::cos(glm::radians(EulerX)), newRotateMatrix[2][2] / glm::cos(glm::radians(EulerX))));
-	float EulerZ = glm::degrees(std::atan2(-newRotateMatrix[0][1] / glm::cos(glm::radians(EulerX)), newRotateMatrix[1][1] / glm::cos(glm::radians(EulerX))));
+	Vector3f C = Math::Cross(Upward, upward);
+	Float32 angle = Math::Degrees(Math::aCos(Math::Dot(Upward, upward) / (Math::Length(Upward) * Math::Length(upward))));
+	Mat4f newRotateMatrix = mQuaternion::AxisAngle(Math::Radians(angle), C);
+	Float32 EulerX = Math::Degrees(std::atan2(newRotateMatrix[2][1], Math::Sqrt(newRotateMatrix[2][0] * newRotateMatrix[2][0] + newRotateMatrix[2][2] * newRotateMatrix[2][2])));
+	Float32 EulerY = Math::Degrees(std::atan2(-newRotateMatrix[2][0] / Math::Cos(Math::Radians(EulerX)), newRotateMatrix[2][2] / Math::Cos(Math::Radians(EulerX))));
+	Float32 EulerZ = Math::Degrees(std::atan2(-newRotateMatrix[0][1] / Math::Cos(Math::Radians(EulerX)), newRotateMatrix[1][1] / Math::Cos(Math::Radians(EulerX))));
 
-	SetEulerAngle(glm::vec3(EulerX, -EulerY, EulerZ) + EulerAngle);
+	SetEulerAngle(Vector3f(EulerX, -EulerY, EulerZ) + EulerAngle);
 }
 
-void Transform::SetModelMatrix_PreFrame(glm::mat4 newMatrix)
+void Transform::SetModelMatrix_PreFrame(Mat4f newMatrix)
 {
 	ModelMatrix_PreFrame = newMatrix;
 }
 
-glm::vec3 Transform::GetForward()
+Vector3f Transform::GetForward()
 {
 	return Forward;
 }
 
-glm::vec3 Transform::GetUpward()
+Vector3f Transform::GetUpward()
 {
 	return Upward;
 }
 
-glm::vec3 Transform::GetLeftward()
+Vector3f Transform::GetLeftward()
 {
 	return Leftward;
 }
 
-glm::vec3 Transform::GetPosition()
+Vector3f Transform::GetPosition()
 {
 	return Position;
 }
 
-glm::vec3 Transform::GetEulerAngle()
+Vector3f Transform::GetEulerAngle()
 {
 	return EulerAngle;
 }
 
-glm::vec3 Transform::GetScale()
+Vector3f Transform::GetScale()
 {
 	return Scale;
 }
 
-glm::mat4 Transform::GetTranslationMatrix()
+Mat4f Transform::GetTranslationMatrix()
 {
 	return TranslationMatrix;
 }
 
-glm::mat4 Transform::GetRotationMatrix()
+Mat4f Transform::GetRotationMatrix()
 {
 	return RotationMatrix;
 }
 
-glm::mat4 Transform::GetScaleMatrix()
+Mat4f Transform::GetScaleMatrix()
 {
 	return ScaleMatrix;
 }
 
-glm::mat4 Transform::GetModelMatrix()
+Mat4f Transform::GetModelMatrix()
 {
 	return ModelMatrix;
 }
 
-glm::mat4 Transform::GetModelMatrix_PreFrame()
+Mat4f Transform::GetModelMatrix_PreFrame()
 {
 	return ModelMatrix_PreFrame;
 }
 
-glm::mat4 Transform::GetModelMatrix_IT()
+Mat4f Transform::GetModelMatrix_IT()
 {
 	return ModelMatrix_IT;
 }
@@ -201,5 +201,5 @@ glm::mat4 Transform::GetModelMatrix_IT()
 void Transform::CalculateModelMatrix()
 {
 	ModelMatrix = TranslationMatrix * ScaleMatrix * RotationMatrix;
-	ModelMatrix_IT = glm::inverse(glm::transpose(ModelMatrix));
+	ModelMatrix_IT = Math::Inverse(Math::Transpose(ModelMatrix));
 }

@@ -10,9 +10,9 @@ public:
 	{
 		LoadModelFromAsset(ModelFileName);
 		BindMaterial(ShadowDepthMaterialInst, LightingMaterialInst);
-		ObjectTransform.SetScale(glm::vec3(1.0, 1.0, 1.0));
-		ObjectTransform.SetEulerAngle(glm::vec3(0.0, 0.0, 0.0));
-		ObjectTransform.SetPosition(glm::vec3(0.0, 0.0, 0.0));
+		ObjectTransform.SetScale(Vector3f(1.0, 1.0, 1.0));
+		ObjectTransform.SetEulerAngle(Vector3f(0.0, 0.0, 0.0));
+		ObjectTransform.SetPosition(Vector3f(0.0, 0.0, 0.0));
 	};
 	~SimpleObject() {};
 
@@ -31,20 +31,20 @@ public:
 	{
 		LoadModelFromAsset(ModelFileName);
 		BindMaterial(ShadowDepthMaterialInst, LightingMaterialInst);
-		ObjectTransform.SetScale(glm::vec3(1.0, 1.0, 1.0));
-		ObjectTransform.SetEulerAngle(glm::vec3(0.0, 0.0, 0.0));
-		ObjectTransform.SetPosition(glm::vec3(0.0, 0.0, 0.0));
+		ObjectTransform.SetScale(Vector3f(1.0, 1.0, 1.0));
+		ObjectTransform.SetEulerAngle(Vector3f(0.0, 0.0, 0.0));
+		ObjectTransform.SetPosition(Vector3f(0.0, 0.0, 0.0));
 	};
 	~DigitalHuman() {};
 
-	float step = 0.005f;
+	Float32 step = 0.005f;
 	virtual void Start(){};
 	virtual void Update()
 	{
-		glm::vec3 eulerAngle = ObjectTransform.GetEulerAngle();
-		//ObjectTransform.SetEulerAngle(eulerAngle + glm::vec3(0.0, 0.0, -0.5));
-		glm::vec3 position = ObjectTransform.GetPosition();
-		//ObjectTransform.SetPosition(glm::vec3(0.0, step, 0.0) + position);
+		Vector3f eulerAngle = ObjectTransform.GetEulerAngle();
+		//ObjectTransform.SetEulerAngle(eulerAngle + Vector3f(0.0, 0.0, -0.5));
+		Vector3f position = ObjectTransform.GetPosition();
+		//ObjectTransform.SetPosition(Vector3f(0.0, step, 0.0) + position);
 		if(position.y < - 5.0)
 		{
 			step = 0.005f;
@@ -64,7 +64,7 @@ class LightGroup
 public:
 	LightGroup(){
 		Intensity = 120000.0f;
-		Color = glm::vec3(1.0, 0.98, 0.975);
+		Color = Vector3f(1.0, 0.98, 0.975);
 		FocalAngleOuter = 8.0f;
 		FocalAngleInner = 0.0f;
 		AttenuationDistance = 700.0f;
@@ -78,11 +78,11 @@ public:
 		SoftRadius = 13.194313f;
 		ShadowBias = 0.025f;
 
-		glm::vec3 TotalTranslate = glm::vec3(0.0, 0.0, 10.0);
+		Vector3f TotalTranslate = Vector3f(0.0, 0.0, 10.0);
 
 		std::shared_ptr<SpotLight> SpotLightKey0 = std::shared_ptr<SpotLight>(new SpotLight());
-		SpotLightKey0->GetTransform()->SetPosition(glm::vec3(-148.65f, 309.37256f, 137.21f) + TotalTranslate);
-		SpotLightKey0->GetTransform()->SetForward(glm::vec3(0.0) - SpotLightKey0->GetTransform()->GetPosition() + TotalTranslate);
+		SpotLightKey0->GetTransform()->SetPosition(Vector3f(-148.65f, 309.37256f, 137.21f) + TotalTranslate);
+		SpotLightKey0->GetTransform()->SetForward(Vector3f(0.0) - SpotLightKey0->GetTransform()->GetPosition() + TotalTranslate);
 		
 		SpotLightKey0->SetIntensity(GetIntensity());
 		SpotLightKey0->SetOuterConeAngle(FocalAngleOuter);
@@ -95,8 +95,8 @@ public:
 		SpotLightKey0->SetShadowBias(ShadowBias);		
 
 		std::shared_ptr<SpotLight> SpotLightKey1 = std::shared_ptr<SpotLight>(new SpotLight());
-		SpotLightKey1->GetTransform()->SetPosition(glm::vec3(-212.18f, 284.45f, 106.085f) + TotalTranslate);
-		SpotLightKey1->GetTransform()->SetForward(glm::vec3(0.0) - SpotLightKey1->GetTransform()->GetPosition() + TotalTranslate);
+		SpotLightKey1->GetTransform()->SetPosition(Vector3f(-212.18f, 284.45f, 106.085f) + TotalTranslate);
+		SpotLightKey1->GetTransform()->SetForward(Vector3f(0.0) - SpotLightKey1->GetTransform()->GetPosition() + TotalTranslate);
 		SpotLightKey1->SetIntensity(GetIntensity());
 		SpotLightKey1->SetOuterConeAngle(FocalAngleOuter);
 		SpotLightKey1->SetInnerConeAngle(FocalAngleInner);
@@ -108,8 +108,8 @@ public:
 		SpotLightKey1->SetShadowBias(ShadowBias);
 
 		std::shared_ptr<SpotLight> SpotLightKey2 = std::shared_ptr<SpotLight>(new SpotLight());
-		SpotLightKey2->GetTransform()->SetPosition(glm::vec3(-225.654f, 290.605f, 63.5933f) + TotalTranslate);
-		SpotLightKey2->GetTransform()->SetForward(glm::vec3(0.0) - SpotLightKey2->GetTransform()->GetPosition() + TotalTranslate);
+		SpotLightKey2->GetTransform()->SetPosition(Vector3f(-225.654f, 290.605f, 63.5933f) + TotalTranslate);
+		SpotLightKey2->GetTransform()->SetForward(Vector3f(0.0) - SpotLightKey2->GetTransform()->GetPosition() + TotalTranslate);
 		SpotLightKey2->SetIntensity(GetIntensity());
 		SpotLightKey2->SetOuterConeAngle(FocalAngleOuter);
 		SpotLightKey2->SetInnerConeAngle(FocalAngleInner);
@@ -121,8 +121,8 @@ public:
 		SpotLightKey2->SetShadowBias(ShadowBias);
 
 		std::shared_ptr<SpotLight> SpotLightKey3 = std::shared_ptr<SpotLight>(new SpotLight());
-		SpotLightKey3->GetTransform()->SetPosition(glm::vec3(-175.6046f, 321.6834f, 52.225f) + TotalTranslate);
-		SpotLightKey3->GetTransform()->SetForward(glm::vec3(0.0) - SpotLightKey3->GetTransform()->GetPosition() + TotalTranslate);
+		SpotLightKey3->GetTransform()->SetPosition(Vector3f(-175.6046f, 321.6834f, 52.225f) + TotalTranslate);
+		SpotLightKey3->GetTransform()->SetForward(Vector3f(0.0) - SpotLightKey3->GetTransform()->GetPosition() + TotalTranslate);
 		SpotLightKey3->SetIntensity(GetIntensity());
 		SpotLightKey3->SetOuterConeAngle(FocalAngleOuter);
 		SpotLightKey3->SetInnerConeAngle(FocalAngleInner);
@@ -134,8 +134,8 @@ public:
 		SpotLightKey3->SetShadowBias(ShadowBias);
 
 		std::shared_ptr<SpotLight> SpotLightKey4 = std::shared_ptr<SpotLight>(new SpotLight());
-		SpotLightKey4->GetTransform()->SetPosition(glm::vec3(-198.706f, 278.2945f, 148.5773f) + TotalTranslate);
-		SpotLightKey4->GetTransform()->SetForward(glm::vec3(0.0) - SpotLightKey4->GetTransform()->GetPosition() + TotalTranslate);
+		SpotLightKey4->GetTransform()->SetPosition(Vector3f(-198.706f, 278.2945f, 148.5773f) + TotalTranslate);
+		SpotLightKey4->GetTransform()->SetForward(Vector3f(0.0) - SpotLightKey4->GetTransform()->GetPosition() + TotalTranslate);
 		SpotLightKey4->SetIntensity(GetIntensity());
 		SpotLightKey4->SetOuterConeAngle(FocalAngleOuter);
 		SpotLightKey4->SetInnerConeAngle(FocalAngleInner);
@@ -147,8 +147,8 @@ public:
 		SpotLightKey4->SetShadowBias(ShadowBias);
 
 		std::shared_ptr<SpotLight> SpotLightKey5 = std::shared_ptr<SpotLight>(new SpotLight());
-		SpotLightKey5->GetTransform()->SetPosition(glm::vec3(-112.0817f, 346.606f, 83.349f) + TotalTranslate);
-		SpotLightKey5->GetTransform()->SetForward(glm::vec3(0.0) - SpotLightKey5->GetTransform()->GetPosition() + TotalTranslate);
+		SpotLightKey5->GetTransform()->SetPosition(Vector3f(-112.0817f, 346.606f, 83.349f) + TotalTranslate);
+		SpotLightKey5->GetTransform()->SetForward(Vector3f(0.0) - SpotLightKey5->GetTransform()->GetPosition() + TotalTranslate);
 		SpotLightKey5->SetIntensity(GetIntensity());
 		SpotLightKey5->SetOuterConeAngle(FocalAngleOuter);
 		SpotLightKey5->SetInnerConeAngle(FocalAngleInner);
@@ -160,8 +160,8 @@ public:
 		SpotLightKey5->SetShadowBias(ShadowBias);
 
 		std::shared_ptr<SpotLight> SpotLightKey6 = std::shared_ptr<SpotLight>(new SpotLight());
-		SpotLightKey6->GetTransform()->SetPosition(glm::vec3(-98.608f, 340.451f, 125.841f) + TotalTranslate);
-		SpotLightKey6->GetTransform()->SetForward(glm::vec3(0.0) - SpotLightKey6->GetTransform()->GetPosition() + TotalTranslate);
+		SpotLightKey6->GetTransform()->SetPosition(Vector3f(-98.608f, 340.451f, 125.841f) + TotalTranslate);
+		SpotLightKey6->GetTransform()->SetForward(Vector3f(0.0) - SpotLightKey6->GetTransform()->GetPosition() + TotalTranslate);
 		SpotLightKey6->SetIntensity(GetIntensity());
 		SpotLightKey6->SetOuterConeAngle(FocalAngleOuter);
 		SpotLightKey6->SetInnerConeAngle(FocalAngleInner);
@@ -173,8 +173,8 @@ public:
 		SpotLightKey6->SetShadowBias(ShadowBias);
 
 		std::shared_ptr<SpotLight> SpotLightKey7 = std::shared_ptr<SpotLight>(new SpotLight());
-		SpotLightKey7->GetTransform()->SetPosition(glm::vec3(-125.5555f, 352.7615f, 40.857f) + TotalTranslate);
-		SpotLightKey7->GetTransform()->SetForward(glm::vec3(0.0) - SpotLightKey7->GetTransform()->GetPosition() + TotalTranslate);
+		SpotLightKey7->GetTransform()->SetPosition(Vector3f(-125.5555f, 352.7615f, 40.857f) + TotalTranslate);
+		SpotLightKey7->GetTransform()->SetForward(Vector3f(0.0) - SpotLightKey7->GetTransform()->GetPosition() + TotalTranslate);
 		SpotLightKey7->SetIntensity(GetIntensity());
 		SpotLightKey7->SetOuterConeAngle(FocalAngleOuter);
 		SpotLightKey7->SetInnerConeAngle(FocalAngleInner);
@@ -186,8 +186,8 @@ public:
 		SpotLightKey7->SetShadowBias(ShadowBias);
 
 		std::shared_ptr<SpotLight> SpotLightKey8 = std::shared_ptr<SpotLight>(new SpotLight());
-		SpotLightKey8->GetTransform()->SetPosition(glm::vec3(-162.131f, 315.528f, 94.717f) + TotalTranslate);
-		SpotLightKey8->GetTransform()->SetForward(glm::vec3(0.0) - SpotLightKey8->GetTransform()->GetPosition() + TotalTranslate);
+		SpotLightKey8->GetTransform()->SetPosition(Vector3f(-162.131f, 315.528f, 94.717f) + TotalTranslate);
+		SpotLightKey8->GetTransform()->SetForward(Vector3f(0.0) - SpotLightKey8->GetTransform()->GetPosition() + TotalTranslate);
 		SpotLightKey8->SetIntensity(GetIntensity());
 		SpotLightKey8->SetOuterConeAngle(FocalAngleOuter);
 		SpotLightKey8->SetInnerConeAngle(FocalAngleInner);
@@ -199,7 +199,7 @@ public:
 		SpotLightKey8->SetShadowBias(ShadowBias);
 
 		Intensity = 20000.0;
-		Color = glm::vec3(1.0, 1.0, 1.0);
+		Color = Vector3f(1.0, 1.0, 1.0);
 		FocalAngleOuter = 7.028856f;
 		FocalAngleInner = 0.0f;
 		AttenuationDistance = 700.0f;
@@ -214,8 +214,8 @@ public:
 		ShadowBias = 0.025f;
 
 		std::shared_ptr<SpotLight> SpotLightKey9 = std::shared_ptr<SpotLight>(new SpotLight());
-		SpotLightKey9->GetTransform()->SetPosition(glm::vec3(1.17633f, -341.986f, 111.556f));
-		SpotLightKey9->GetTransform()->SetForward(glm::vec3(0.0) - SpotLightKey9->GetTransform()->GetPosition() );
+		SpotLightKey9->GetTransform()->SetPosition(Vector3f(1.17633f, -341.986f, 111.556f));
+		SpotLightKey9->GetTransform()->SetForward(Vector3f(0.0) - SpotLightKey9->GetTransform()->GetPosition() );
 		SpotLightKey9->SetIntensity(GetIntensity());
 		SpotLightKey9->SetOuterConeAngle(FocalAngleOuter);
 		SpotLightKey9->SetInnerConeAngle(FocalAngleInner);
@@ -227,7 +227,7 @@ public:
 		SpotLightKey9->SetShadowBias(ShadowBias);
 
 		Intensity = 500000.0f;
-		Color = glm::vec3(1.0, 1.0, 1.0);
+		Color = Vector3f(1.0, 1.0, 1.0);
 		FocalAngleOuter = 7.0f;
 		FocalAngleInner = 0.0f;
 		AttenuationDistance = 700.0f;
@@ -242,8 +242,8 @@ public:
 		ShadowBias = 0.025f;
 
 		std::shared_ptr<SpotLight> SpotLightKey10 = std::shared_ptr<SpotLight>(new SpotLight());
-		SpotLightKey10->GetTransform()->SetPosition(glm::vec3(341.456f, 6.170f, 67.12f));
-		SpotLightKey10->GetTransform()->SetForward(glm::vec3(0.0) - SpotLightKey10->GetTransform()->GetPosition());
+		SpotLightKey10->GetTransform()->SetPosition(Vector3f(341.456f, 6.170f, 67.12f));
+		SpotLightKey10->GetTransform()->SetForward(Vector3f(0.0) - SpotLightKey10->GetTransform()->GetPosition());
 		SpotLightKey10->SetIntensity(GetIntensity());
 		SpotLightKey10->SetOuterConeAngle(FocalAngleOuter);
 		SpotLightKey10->SetInnerConeAngle(FocalAngleInner);
@@ -267,8 +267,8 @@ public:
 		//_Scene->AddLight(SpotLightKey10);
 
 		std::shared_ptr<PointLight> PointLight0 = std::shared_ptr<PointLight>(new PointLight());
-		PointLight0->GetTransform()->SetPosition(glm::vec3(40.0, 0.0, 0.0));
-		PointLight0->SetColor(glm::vec3(1.0, 1.0, 1.0));
+		PointLight0->GetTransform()->SetPosition(Vector3f(40.0, 0.0, 0.0));
+		PointLight0->SetColor(Vector3f(1.0, 1.0, 1.0));
 		PointLight0->SetIntensity(100.0);
 		PointLight0->SetAttenuationRadius(1000.0f);
 		PointLight0->SetSourceRadius(0.0f);
@@ -281,10 +281,10 @@ public:
 	~LightGroup(){};
 
 private:
-	float GetSourceRadius()
+	Float32 GetSourceRadius()
 	{
-		float SampleSquared = (float) max(LightSamplesSquared, 1);
-		float Length = min(LightLength, LightWidth);
+		Float32 SampleSquared = (Float32) max(LightSamplesSquared, 1);
+		Float32 Length = min(LightLength, LightWidth);
 		Length /= SampleSquared;
 		if(LightSamplesSquared != 0)
 		{
@@ -294,39 +294,39 @@ private:
 			Length *= 0.0f;
 		}
 		Length /= 2.0f;
-		float SourceRadius1 = Length * SourceRadiusMult;
-		int SampleSquaredInt = glm::clamp((int)LightSamplesSquared, 0, 1);
+		Float32 SourceRadius1 = Length * SourceRadiusMult;
+		Int32 SampleSquaredInt = Math::Clamp((Int32)LightSamplesSquared, 0, 1);
 		SourceRadius1 *= SampleSquaredInt;
 		SampleSquaredInt = 1 - SampleSquaredInt;
-		float SourceRadius2 = min(LightLength, LightWidth) * SourceRadiusMult;
+		Float32 SourceRadius2 = min(LightLength, LightWidth) * SourceRadiusMult;
 		SourceRadius2 *= SampleSquaredInt;
-		float SourceRadius = SourceRadius1 + SourceRadius2;
+		Float32 SourceRadius = SourceRadius1 + SourceRadius2;
 		return SourceRadius;
 	}
 
-	float GetIntensity()
+	Float32 GetIntensity()
 	{
-		float SampleSquared = (float)(LightSamplesSquared + 1);
-		return Intensity / glm::pow(SampleSquared, 2.0f);
+		Float32 SampleSquared = (Float32)(LightSamplesSquared + 1);
+		return Intensity / Math::Pow(SampleSquared, 2.0f);
 	}
 
-	float GetSourceLength()
+	Float32 GetSourceLength()
 	{
 		return (max(LightLength, LightWidth) / min(LightLength, LightWidth) - 1.0f) * GetSourceRadius() * 2.0f;
 	}
 
-	float Intensity;
-	glm::vec3 Color;
-	float FocalAngleOuter;
-	float FocalAngleInner;
-	float AttenuationDistance;
-	float LightWidth;
-	float LightLength ;
-	bool CastShadows;
-	int LightSamplesSquared;
-	float SourceRadiusMult;
-	float CenterOfInterestLength;
-	bool SetEnabled;
-	float SoftRadius;
-	float ShadowBias;
+	Float32 Intensity;
+	Vector3f Color;
+	Float32 FocalAngleOuter;
+	Float32 FocalAngleInner;
+	Float32 AttenuationDistance;
+	Float32 LightWidth;
+	Float32 LightLength ;
+	Bool CastShadows;
+	Int32 LightSamplesSquared;
+	Float32 SourceRadiusMult;
+	Float32 CenterOfInterestLength;
+	Bool SetEnabled;
+	Float32 SoftRadius;
+	Float32 ShadowBias;
 };

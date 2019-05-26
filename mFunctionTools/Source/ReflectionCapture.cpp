@@ -2,7 +2,7 @@
 #include "ReflectionCapture.h"
 #include "DeferRenderPipeline.h"
 
-SphereReflectionCapture::SphereReflectionCapture(const glm::vec3 &position, const float &radius, const float& brightness) :
+SphereReflectionCapture::SphereReflectionCapture(const Vector3f &position, const Float32 &radius, const Float32& brightness) :
 	InfluenceRadius(radius),
 	Brightness(brightness),
 	CaptureTexSize(512)
@@ -10,9 +10,9 @@ SphereReflectionCapture::SphereReflectionCapture(const glm::vec3 &position, cons
 	ObjectTransform.SetPosition(position);
 	CreateCaptureResources();
 
-	int Count = 0;
+	Int32 Count = 0;
 	std::vector<std::shared_ptr<Object>> AbstractActors = _Scene->GetObjects(ObjectType::AbstractActor);
-	for(int Index = 0; Index < AbstractActors.size(); Index++)
+	for(Int32 Index = 0; Index < AbstractActors.size(); Index++)
 	{
 		if(dynamic_cast<SphereReflectionCapture*>(AbstractActors[Index].get()) != nullptr)
 		{
@@ -59,12 +59,12 @@ void SphereReflectionCapture::CreateCaptureResources()
 
 void SphereReflectionCapture::Create6FacesCameraList()
 {
-	std::shared_ptr<Camera> LCamera0 = std::shared_ptr<Camera>(new Camera(ObjectTransform.GetPosition(), glm::vec3(-90.0,  0.0,    0.0), glm::radians(90.0f), 1.0f, 0.1f, InfluenceRadius, glm::ivec2(CaptureTexSize, CaptureTexSize)));
-	std::shared_ptr<Camera> LCamera1 = std::shared_ptr<Camera>(new Camera(ObjectTransform.GetPosition(), glm::vec3(90.0,  0.0,  180.0), glm::radians(90.0f), 1.0f, 0.1f, InfluenceRadius, glm::ivec2(CaptureTexSize, CaptureTexSize)));
-	std::shared_ptr<Camera> LCamera2 = std::shared_ptr<Camera>(new Camera(ObjectTransform.GetPosition(), glm::vec3(180.0,  0.0,   90.0), glm::radians(90.0f), 1.0f, 0.1f, InfluenceRadius, glm::ivec2(CaptureTexSize, CaptureTexSize)));
-	std::shared_ptr<Camera> LCamera3 = std::shared_ptr<Camera>(new Camera(ObjectTransform.GetPosition(), glm::vec3(0.0,  0.0,  -90.0), glm::radians(90.0f), 1.0f, 0.1f, InfluenceRadius, glm::ivec2(CaptureTexSize, CaptureTexSize)));
-	std::shared_ptr<Camera> LCamera4 = std::shared_ptr<Camera>(new Camera(ObjectTransform.GetPosition(), glm::vec3(0.0,  90.0,  -90.0), glm::radians(90.0f), 1.0f, 0.1f, InfluenceRadius, glm::ivec2(CaptureTexSize, CaptureTexSize)));
-	std::shared_ptr<Camera> LCamera5 = std::shared_ptr<Camera>(new Camera(ObjectTransform.GetPosition(), glm::vec3(0.0,  -90.0,  90.0), glm::radians(90.0f), 1.0f, 0.1f, InfluenceRadius, glm::ivec2(CaptureTexSize, CaptureTexSize)));
+	std::shared_ptr<Camera> LCamera0 = std::shared_ptr<Camera>(new Camera(ObjectTransform.GetPosition(), Vector3f(-90.0,  0.0,    0.0), Math::Radians(90.0f), 1.0f, 0.1f, InfluenceRadius, Vector2i(CaptureTexSize, CaptureTexSize)));
+	std::shared_ptr<Camera> LCamera1 = std::shared_ptr<Camera>(new Camera(ObjectTransform.GetPosition(), Vector3f(90.0,  0.0,  180.0), Math::Radians(90.0f), 1.0f, 0.1f, InfluenceRadius, Vector2i(CaptureTexSize, CaptureTexSize)));
+	std::shared_ptr<Camera> LCamera2 = std::shared_ptr<Camera>(new Camera(ObjectTransform.GetPosition(), Vector3f(180.0,  0.0,   90.0), Math::Radians(90.0f), 1.0f, 0.1f, InfluenceRadius, Vector2i(CaptureTexSize, CaptureTexSize)));
+	std::shared_ptr<Camera> LCamera3 = std::shared_ptr<Camera>(new Camera(ObjectTransform.GetPosition(), Vector3f(0.0,  0.0,  -90.0), Math::Radians(90.0f), 1.0f, 0.1f, InfluenceRadius, Vector2i(CaptureTexSize, CaptureTexSize)));
+	std::shared_ptr<Camera> LCamera4 = std::shared_ptr<Camera>(new Camera(ObjectTransform.GetPosition(), Vector3f(0.0,  90.0,  -90.0), Math::Radians(90.0f), 1.0f, 0.1f, InfluenceRadius, Vector2i(CaptureTexSize, CaptureTexSize)));
+	std::shared_ptr<Camera> LCamera5 = std::shared_ptr<Camera>(new Camera(ObjectTransform.GetPosition(), Vector3f(0.0,  -90.0,  90.0), Math::Radians(90.0f), 1.0f, 0.1f, InfluenceRadius, Vector2i(CaptureTexSize, CaptureTexSize)));
 
 	LCamera0->SetNextCamera(LCamera1);
 	LCamera1->SetNextCamera(LCamera2);
@@ -78,7 +78,7 @@ void SphereReflectionCapture::Create6FacesCameraList()
 void SphereReflectionCapture::CaptureWithPipeLine(std::shared_ptr<DeferRenderPipeline> Pipeline)
 {
 	Camera * C = CaptureCamera.get();
-	for(int FaceIndex = 0; FaceIndex < 6; FaceIndex++)
+	for(Int32 FaceIndex = 0; FaceIndex < 6; FaceIndex++)
 	{
 		_GPUBuffers->UpdateViewBuffer(C);
 		_GPUBuffers->UpdateCustomBufferData();
@@ -111,18 +111,18 @@ void SphereReflectionCapture::CaptureWithPipeLine(std::shared_ptr<DeferRenderPip
 void SphereReflectionCapture::CalReflectionCubeTexAvgBrightness()
 {
 	//Create GPU Resources
-	unsigned int CalRenderTex;
+	UInt32 CalRenderTex;
 	glGenTextures(1, &CalRenderTex);
 	glBindTexture(GL_TEXTURE_2D, CalRenderTex);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
 	glBindTexture(GL_TEXTURE_2D, 0);
 	
-	unsigned int CalFrameBuffer;
+	UInt32 CalFrameBuffer;
 	glGenFramebuffers(1, &CalFrameBuffer);
 	glBindFramebuffer(GL_FRAMEBUFFER, CalFrameBuffer);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, CalRenderTex, 0);
 
-	unsigned int attachments[1] = { GL_COLOR_ATTACHMENT0 };
+	UInt32 attachments[1] = { GL_COLOR_ATTACHMENT0 };
 	glDrawBuffers(1, attachments);
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 	{
@@ -138,13 +138,13 @@ void SphereReflectionCapture::CalReflectionCubeTexAvgBrightness()
 	std::shared_ptr<RectBufferObject> QuadBufferObject = std::shared_ptr<RectBufferObject>(new RectBufferObject());
 
 	//Opengl pc do not support texturelod in frag shader. So we remember and set min/max lod hear.
-	int MinLod, MaxLod;
+	Int32 MinLod, MaxLod;
 	glBindTexture(GL_TEXTURE_CUBE_MAP, CaptureTexCube);
 	glGetTexParameteriv(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_LOD, &MinLod);
 	glGetTexParameteriv(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAX_LOD, &MaxLod);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 
-	int NumMip = (int)glm::log2((float)CaptureTexSize);
+	Int32 NumMip = (Int32)Math::Log2((Float32)CaptureTexSize);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, CaptureTexCube);
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_LOD, NumMip);
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_LOD, NumMip);
@@ -156,13 +156,13 @@ void SphereReflectionCapture::CalReflectionCubeTexAvgBrightness()
 	ComputeMaterialInst->GetParent()->Draw(QuadBufferObject->VAO, QuadBufferObject->NumFaces, QuadBufferObject->IndexType);
 	
 	//Get Result
-	unsigned char BrightnessRGBA[4];
+	UInt8 BrightnessRGBA[4];
 	glPixelStorei(GL_PACK_ALIGNMENT, 1);
 	glReadPixels(0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, &BrightnessRGBA);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	
-	//Decode RGBA8 to float
-	AverageBrightness = ((float)BrightnessRGBA[0] / 10.0 + (float)BrightnessRGBA[1] / 100.0 + (float)BrightnessRGBA[2] / 1000.0 + (float)BrightnessRGBA[3] / 10000.0) / 255 * 10.0;
+	//Decode RGBA8 to Float32
+	AverageBrightness = ((Float32)BrightnessRGBA[0] / 10.0f + (Float32)BrightnessRGBA[1] / 100.0f + (Float32)BrightnessRGBA[2] / 1000.0f + (Float32)BrightnessRGBA[3] / 10000.0f) / 255.0f * 10.0f;
 
 	//Release Buffer
 	glDeleteFramebuffers(1, &CalFrameBuffer);
@@ -175,22 +175,22 @@ void SphereReflectionCapture::CalReflectionCubeTexAvgBrightness()
 	glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 }
 
-unsigned int SphereReflectionCapture::GetReflectionTextureID()
+UInt32 SphereReflectionCapture::GetReflectionTextureID()
 {
 	return CaptureTexCube;
 }
 
-float SphereReflectionCapture::GetInfluenceRaidus()
+Float32 SphereReflectionCapture::GetInfluenceRaidus()
 {
 	return InfluenceRadius;
 }
 
-float SphereReflectionCapture::GetBrightness()
+Float32 SphereReflectionCapture::GetBrightness()
 {
 	return Brightness;
 }
 
-float SphereReflectionCapture::GetAverageBrightness()
+Float32 SphereReflectionCapture::GetAverageBrightness()
 {
 	return AverageBrightness;
 }

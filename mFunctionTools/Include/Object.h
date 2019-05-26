@@ -12,8 +12,8 @@ public:
 
 	Transform ObjectTransform;
 	
-	bool bNeedCheckClip;
-	bool bNeedClip;
+	Bool bNeedCheckClip;
+	Bool bNeedClip;
 
 	virtual void CheckWhetherNeedClip(std::shared_ptr<Camera> camera) = 0;
 	virtual void Start() = 0;

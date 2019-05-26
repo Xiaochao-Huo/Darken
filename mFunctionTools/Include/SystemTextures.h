@@ -1,5 +1,5 @@
 #pragma once
-#include "glm.hpp"
+#include "TypeDefine.h"
 
 class SystemTextureFactory
 {
@@ -8,10 +8,10 @@ public:
 	~SystemTextureFactory();
 
 	void GeneratePreIntegratedGFTexture();
-	unsigned int GetPreIntegratedGF_Tex();
+	UInt32 GetPreIntegratedGF_Tex();
 
 private:
-	unsigned int PreIntegratedGF_Tex;
+	UInt32 PreIntegratedGF_Tex;
 };
 
 

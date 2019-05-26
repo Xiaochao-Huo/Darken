@@ -6,7 +6,7 @@
 class SphereReflectionCapture : public Object
 {
 public:
-	SphereReflectionCapture(const glm::vec3 &position, const float &radius, const float& brightness);
+	SphereReflectionCapture(const Vector3f &position, const Float32 &radius, const Float32& brightness);
 	~SphereReflectionCapture();
 
 	virtual void Start() {};
@@ -21,18 +21,18 @@ public:
 
 	void CreateCaptureResources();
 	void Create6FacesCameraList();
-	unsigned int GetReflectionTextureID();
-	float GetInfluenceRaidus();
-	float GetBrightness();
-	float GetAverageBrightness();
+	UInt32 GetReflectionTextureID();
+	Float32 GetInfluenceRaidus();
+	Float32 GetBrightness();
+	Float32 GetAverageBrightness();
 
 private:
-	unsigned int CaptureTexCube;
-	unsigned int CaptureTex2D;
-	unsigned int CaptureTexSize;
+	UInt32 CaptureTexCube;
+	UInt32 CaptureTex2D;
+	UInt32 CaptureTexSize;
 	std::shared_ptr<Camera> CaptureCamera;
 
-	float InfluenceRadius;
-	float Brightness;
-	float AverageBrightness;
+	Float32 InfluenceRadius;
+	Float32 Brightness;
+	Float32 AverageBrightness;
 };

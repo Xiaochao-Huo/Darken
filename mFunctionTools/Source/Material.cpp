@@ -51,8 +51,8 @@ void Material::BindUniforms()
 		auto& uniformitem = uniformitempair.second;
 		if (uniformitem.DataPtr)
 		{
-			int Location      = uniformitem.Location;
-			unsigned int Size = uniformitem.Size;
+			Int32 Location      = uniformitem.Location;
+			UInt32 Size = uniformitem.Size;
 			switch (uniformitem.DataType)
 			{
 			case UniformType::GLSL_VEC2: glUniform2fv(Location, Size, reinterpret_cast<GLfloat*>(uniformitem.DataPtr)); break;
@@ -77,36 +77,36 @@ void Material::BindSamplers()
 	for (auto& uniformitempair : MaterialProgram->Uniforms_Texture)
 	{
 		auto& uniformitem = uniformitempair.second;
-		int Location      = uniformitem.Location;
+		Int32 Location      = uniformitem.Location;
 		void* IDPtr       = uniformitem.IDPtr;
 		glActiveTexture(GL_TEXTURE0 + Location);
 		switch (uniformitem.DataType)
 		{
 		case UniformType::GLSL_TEXTURE2D:
-			glBindTexture(GL_TEXTURE_2D, *((unsigned int*)IDPtr));
+			glBindTexture(GL_TEXTURE_2D, *((UInt32*)IDPtr));
 			break;
 		case UniformType::GLSL_TEXTURECUBE:
-			glBindTexture(GL_TEXTURE_CUBE_MAP, *((unsigned int*)IDPtr));
+			glBindTexture(GL_TEXTURE_CUBE_MAP, *((UInt32*)IDPtr));
 			break;
 		case UniformType::GLSL_TEXTURE3D:
-			glBindTexture(GL_TEXTURE_3D, *((unsigned int*)IDPtr));
+			glBindTexture(GL_TEXTURE_3D, *((UInt32*)IDPtr));
 			break;
 		case UniformType::GLSL_TEXTURE_2D_ARRAY:
-			glBindTexture(GL_TEXTURE_2D_ARRAY, *((unsigned int*)IDPtr));
+			glBindTexture(GL_TEXTURE_2D_ARRAY, *((UInt32*)IDPtr));
 			break;
 		default:
 			break;
 		}
 	}
 }
-void Material::Draw(unsigned int VAO, int NumFaces, IndexSizeType indexSize, int Offset, GLDrawType drawType)
+void Material::Draw(UInt32 VAO, Int32 NumFaces, IndexSizeType indexSize, Int32 Offset, GLDrawType drawType)
 {
 	BindProgram();
 	BindUniforms();
 	BindSamplers();
 
-	int IndexSize = 0;
-	int GL_IndexType;
+	Int32 IndexSize = 0;
+	Int32 GL_IndexType;
 	switch (indexSize)
 	{
 	case Index16Bits:
@@ -127,9 +127,9 @@ void Material::Draw(unsigned int VAO, int NumFaces, IndexSizeType indexSize, int
 	case Unkown:
 		break;
 	case OGL_ELEMENT:
-		glDrawElements(GL_TRIANGLES, NumFaces * 3, GL_IndexType, reinterpret_cast<void*>(Offset * IndexSize));
+		glDrawElements(GL_TRIANGLES, NumFaces * 3, GL_IndexType, reinterpret_cast<void*>((Int64)Offset * IndexSize));
 		break;
-	case OGL_LINE_STRIP: glDrawElements(GL_LINE_STRIP, NumFaces * 3, GL_IndexType, reinterpret_cast<void*>(Offset * IndexSize));
+	case OGL_LINE_STRIP: glDrawElements(GL_LINE_STRIP, NumFaces * 3, GL_IndexType, reinterpret_cast<void*>((Int64)Offset * IndexSize));
 		break;
 	default:
 		break;
@@ -145,7 +145,7 @@ void Material::LoadAndCreateShaders(std::vector<std::string>& shaderNames)
 	}
 	MaterialProgram->shaders = std::vector<Shader>(shaderNames.size());
 
-	for (unsigned int i = 0; i < shaderNames.size(); i++)
+	for (UInt32 i = 0; i < shaderNames.size(); i++)
 	{
 		std::ifstream ShaderFile;
 		ShaderFile.open(AssetFolderPath + shaderNames[i]);
@@ -159,8 +159,8 @@ void Material::LoadAndCreateShaders(std::vector<std::string>& shaderNames)
 		ShaderStream << ShaderFile.rdbuf();
 		std::string SourceCode = ShaderStream.str();
 
-		int loc = shaderNames[i].find('.');
-		const char ShaderType = shaderNames[i][loc + 1];
+		Int32 loc =(Int32) shaderNames[i].find('.');
+		const Int8 ShaderType = shaderNames[i][loc + 1];
 
 		switch (ShaderType)
 		{
@@ -195,7 +195,7 @@ void Material::LoadAndCreateShaders(std::vector<std::string>& shaderNames)
 
 void Material::FindShaderNames(std::vector<std::string>& shaderNames)
 {
-	for (unsigned int i = 0; i < shaderNames.size(); i++)
+	for (UInt32 i = 0; i < shaderNames.size(); i++)
 	{
 		std::ifstream ShaderFile;
 		ShaderFile.open(AssetFolderPath + shaderNames[i]);
@@ -211,7 +211,7 @@ void Material::FindShaderNames(std::vector<std::string>& shaderNames)
 void Material::CreateProgram()
 {
 	MaterialProgram->Id = glCreateProgram();
-	for (unsigned int i = 0; i < MaterialProgram->shaders.size(); i++)
+	for (UInt32 i = 0; i < MaterialProgram->shaders.size(); i++)
 	{
 		glAttachShader(MaterialProgram->Id, MaterialProgram->shaders[i].Id);
 	}
@@ -238,17 +238,17 @@ void Material::CreateProgram()
 
 void Material::FindAttibInfos()
 {
-	int AttribCount;
-	int AttribName_MaxLength;
+	Int32 AttribCount;
+	Int32 AttribName_MaxLength;
 	glGetProgramiv(MaterialProgram->Id, GL_ACTIVE_ATTRIBUTES, &AttribCount);
 	glGetProgramiv(MaterialProgram->Id, GL_ACTIVE_ATTRIBUTE_MAX_LENGTH, &AttribName_MaxLength);
-	char * AttribName = new char[AttribName_MaxLength];
-	for (int AttribIndex = 0; AttribIndex < AttribCount; AttribIndex++)
+	Int8 * AttribName = new Int8[AttribName_MaxLength];
+	for (Int32 AttribIndex = 0; AttribIndex < AttribCount; AttribIndex++)
 	{
 		AttribItem Attrib;
-		int NameLength;
-		int AttribSize;
-		unsigned int AttribType;
+		Int32 NameLength;
+		Int32 AttribSize;
+		UInt32 AttribType;
 		glGetActiveAttrib(MaterialProgram->Id, AttribIndex, AttribName_MaxLength, &NameLength, &AttribSize, &AttribType, AttribName);
 		MaterialProgram->Attribs.insert(std::pair<std::string, AttribItem>(std::string(AttribName), Attrib));
 	}
@@ -257,43 +257,43 @@ void Material::FindAttibInfos()
 
 void Material::FindUniformInfos()
 {
-	int UniformBlockCount;
+	Int32 UniformBlockCount;
 	glGetProgramiv(MaterialProgram->Id, GL_ACTIVE_UNIFORM_BLOCKS, &UniformBlockCount);
 	if (UniformBlockCount > 0) {
-		int UniformBlockName_MaxLength;
+		Int32 UniformBlockName_MaxLength;
 		glGetProgramiv(MaterialProgram->Id, GL_ACTIVE_UNIFORM_BLOCK_MAX_NAME_LENGTH, &UniformBlockName_MaxLength);
-		char* UniformBlockName = new char[UniformBlockName_MaxLength];
-		for (int UniformBlockIndex = 0; UniformBlockIndex < UniformBlockCount; UniformBlockIndex++)
+		Int8* UniformBlockName = new Int8[UniformBlockName_MaxLength];
+		for (Int32 UniformBlockIndex = 0; UniformBlockIndex < UniformBlockCount; UniformBlockIndex++)
 		{
-			int NameLength;
+			Int32 NameLength;
 			glGetActiveUniformBlockName(MaterialProgram->Id, UniformBlockIndex, UniformBlockName_MaxLength, &NameLength, UniformBlockName);
 
-			int UniformCountInBlock;
+			Int32 UniformCountInBlock;
 			glGetActiveUniformBlockiv(MaterialProgram->Id, UniformBlockIndex, GL_UNIFORM_BLOCK_ACTIVE_UNIFORMS, &UniformCountInBlock);
-			int* InUniformIndices = new int[UniformCountInBlock];
+			Int32* InUniformIndices = new Int32[UniformCountInBlock];
 			glGetActiveUniformBlockiv(MaterialProgram->Id, UniformBlockIndex, GL_UNIFORM_BLOCK_ACTIVE_UNIFORM_INDICES, InUniformIndices);
-			int UniformInBlockName_MaxLength;
+			Int32 UniformInBlockName_MaxLength;
 			glGetProgramiv(MaterialProgram->Id, GL_ACTIVE_UNIFORM_MAX_LENGTH, &UniformInBlockName_MaxLength);
 
-			int DataSize;
+			Int32 DataSize;
 			glGetActiveUniformBlockiv(MaterialProgram->Id, UniformBlockIndex, GL_UNIFORM_BLOCK_DATA_SIZE, &DataSize);
 
 			std::hash<string> hs;
 			std::shared_ptr<UniformItem_Block> Block = std::shared_ptr<UniformItem_Block>(new UniformItem_Block());
-			Block->HashCode = hs(UniformBlockName);
+			Block->HashCode = (Int32)hs(UniformBlockName);
 			Block->DataSize_Byte = DataSize;
 			Block->Index = UniformBlockIndex;
 			MaterialProgram->Uniforms_Block.insert(std::pair<std::string, std::shared_ptr<UniformItem_Block>>(UniformBlockName, Block));
 
-			char* UniformInBlockName = new char[UniformInBlockName_MaxLength];
-			for (int Index = 0; Index < UniformCountInBlock; Index++)
+			Int8* UniformInBlockName = new Int8[UniformInBlockName_MaxLength];
+			for (Int32 Index = 0; Index < UniformCountInBlock; Index++)
 			{
-				unsigned int InUniformIndex = InUniformIndices[Index];
+				UInt32 InUniformIndex = InUniformIndices[Index];
 
-				int NameLength;
-				int Size;
-				unsigned int Type;
-				int Offset;
+				Int32 NameLength;
+				Int32 Size;
+				UInt32 Type;
+				Int32 Offset;
 				glGetActiveUniform(MaterialProgram->Id, InUniformIndex, UniformInBlockName_MaxLength, &NameLength, &Size, &Type, UniformInBlockName);
 				glGetActiveUniformsiv(MaterialProgram->Id, 1, &InUniformIndex, GL_UNIFORM_OFFSET, &Offset);
 
@@ -304,7 +304,7 @@ void Material::FindUniformInfos()
 				UniformInBlock.DataType = UniformTypeMap[Type];
 				UniformInBlock.Offset_Byte = Offset;
 				UniformInBlock.Size = Size;
-				Block->Uniforms.insert(std::pair<unsigned int, UniformItem_WithinBlock>(UniformInBlock.Offset_Byte, UniformInBlock));
+				Block->Uniforms.insert(std::pair<UInt32, UniformItem_WithinBlock>(UniformInBlock.Offset_Byte, UniformInBlock));
 			}
 			delete[] InUniformIndices;
 		}
@@ -321,16 +321,16 @@ void Material::FindUniformInfos()
 		}
 	}
 
-	int UniformCount;
+	Int32 UniformCount;
 	glGetProgramiv(MaterialProgram->Id, GL_ACTIVE_UNIFORMS, &UniformCount);
-	int UniformName_MaxLength;
+	Int32 UniformName_MaxLength;
 	glGetProgramiv(MaterialProgram->Id, GL_ACTIVE_UNIFORM_MAX_LENGTH, &UniformName_MaxLength);
-	char* UniformName = new char[UniformName_MaxLength];
-	for (int UniformIndex = 0; UniformIndex < UniformCount; UniformIndex++)
+	Int8* UniformName = new Int8[UniformName_MaxLength];
+	for (Int32 UniformIndex = 0; UniformIndex < UniformCount; UniformIndex++)
 	{
-		int NameLength;
-		int Size;
-		unsigned int Type;
+		Int32 NameLength;
+		Int32 Size;
+		UInt32 Type;
 		glGetActiveUniform(MaterialProgram->Id, UniformIndex, UniformName_MaxLength, &NameLength, &Size, &Type, UniformName);
 
 		UniformName[NameLength - 3] = Size > 1 ? '\0' : UniformName[NameLength - 3]; //Multi Size variable's name is "abcd[0]". We delete [0] here, and we can also get location with "abcd".
@@ -372,7 +372,7 @@ void Material::LinkLocation()
 		MaterialProgram->Uniforms_Basic[name].Location = loc;
 	}
 
-	int newLoc;
+	Int32 newLoc;
 	std::unordered_map<std::string, UniformItem_Texture>::iterator it;
 	for (it = MaterialProgram->Uniforms_Texture.begin(), newLoc = 0; it != MaterialProgram->Uniforms_Texture.end(); it++, newLoc++)
 	{
@@ -386,9 +386,9 @@ void Material::LinkLocation()
 	glUseProgram(0);
 }
 
-unsigned int Material::CreateShaderGPUObjFromSrcCode(std::string & srcCode, ShaderType type)
+UInt32 Material::CreateShaderGPUObjFromSrcCode(std::string & srcCode, ShaderType type)
 {
-	unsigned int outShader;
+	UInt32 outShader;
 
 	switch (type)
 	{
@@ -414,7 +414,7 @@ unsigned int Material::CreateShaderGPUObjFromSrcCode(std::string & srcCode, Shad
 		std::cout << "loadShader: Unknown shader type requested." << std::endl;
 	}
 
-	const char* vShaderCode = srcCode.c_str();
+	const Int8* vShaderCode = srcCode.c_str();
 	glShaderSource(outShader, 1, &vShaderCode, NULL);
 	glCompileShader(outShader);
 

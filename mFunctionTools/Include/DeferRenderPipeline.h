@@ -18,8 +18,8 @@ class DeferRenderPipeline
 public:
 	DeferRenderPipeline();
 	~DeferRenderPipeline();
-	void RenderShadowDepthPass(unsigned int typeFlags);
-	void RenderLightingPass(unsigned int typeFlags);
+	void RenderShadowDepthPass(UInt32 typeFlags);
+	void RenderLightingPass(UInt32 typeFlags);
 	void RenderSSSPass();
 	void ExecuteTemporalAA();
 	void ExecuteToneMapping();
@@ -40,9 +40,9 @@ public:
 	std::shared_ptr<ToneMapping> ToneMappingPass;
 
 private:
-	glm::mat4 PPModelMatrix;
-	glm::mat4 PPViewMatrix;
-	glm::mat4 PPProjectMatrix;
+	Mat4f PPModelMatrix;
+	Mat4f PPViewMatrix;
+	Mat4f PPProjectMatrix;
 	std::shared_ptr<RectBufferObject> PPObj;
 
 	void SortSceneLights();
@@ -51,9 +51,9 @@ private:
 
 struct ShadowDepthMaterialDataIDs
 {
-	int LightSpaceVPMatrixID;
-	int LightCamera_ZBufferParamsID;
-	int bDirectLightID;
+	Int32 LightSpaceVPMatrixID;
+	Int32 LightCamera_ZBufferParamsID;
+	Int32 bDirectLightID;
 	
 	ShadowDepthMaterialDataIDs()
 	{
@@ -68,40 +68,40 @@ class ShadowDepth
 public:
 	ShadowDepth(std::vector<Light*> lights);
 	~ShadowDepth();
-	std::vector<unsigned int> ShadowDepth_Texs2D;
-	std::vector<unsigned int> ShadowDepth_TexsCube;
+	std::vector<UInt32> ShadowDepth_Texs2D;
+	std::vector<UInt32> ShadowDepth_TexsCube;
 	std::vector<Light*> Lights;
 	std::shared_ptr<MaterialInstance> ShadowDepthMaterialInst;
-	int ShadowDepthTexWidth;
-	int ShadowDepthTexHeight;
+	Int32 ShadowDepthTexWidth;
+	Int32 ShadowDepthTexHeight;
 
 	void Render(unsigned typeFlags);
 private:
 	ShadowDepthMaterialDataIDs MaterialDataIDs;
-	std::vector<unsigned int> ShadowDepthFrameBuffers;
-	std::vector<unsigned int> ShadowDepthRenderBuffers;
+	std::vector<UInt32> ShadowDepthFrameBuffers;
+	std::vector<UInt32> ShadowDepthRenderBuffers;
 
 	void CreateShadowDepthResources();
 	void CalculateLightsVPMatrix();
-	void RenderDirectLightDepth(int LightIndex, const std::vector<std::shared_ptr<Object>> &Objects);
-	void RenderPointLightDepth(int LightIndex, const std::vector<std::shared_ptr<Object>> &Objects);
-	void RenderSpotLightDepth(int LightIndex, const std::vector<std::shared_ptr<Object>> &Objects);
+	void RenderDirectLightDepth(Int32 LightIndex, const std::vector<std::shared_ptr<Object>> &Objects);
+	void RenderPointLightDepth(Int32 LightIndex, const std::vector<std::shared_ptr<Object>> &Objects);
+	void RenderSpotLightDepth(Int32 LightIndex, const std::vector<std::shared_ptr<Object>> &Objects);
 };
 
 struct LightingMaterialDataIDs
 {
-	int ShadowDepth_Tex2DID;
-	int ShadowDepth_TexCubeID;
-	int LightSpaceVPMatrixID;
-	int PointLightSpaceVPMatricesID;
-	int LightDirWorldID;
-	int LightColorID;
-	int LightCamera_ZBufferParamsID;
-	int bDirectLightID;
-	int ShadowBufferSizeID;
-	int ShadowDepthSoftTransitionScaleID;
-	int ProjectionDepthBiasParametersID;
-	int bLastLightID;
+	Int32 ShadowDepth_Tex2DID;
+	Int32 ShadowDepth_TexCubeID;
+	Int32 LightSpaceVPMatrixID;
+	Int32 PointLightSpaceVPMatricesID;
+	Int32 LightDirWorldID;
+	Int32 LightColorID;
+	Int32 LightCamera_ZBufferParamsID;
+	Int32 bDirectLightID;
+	Int32 ShadowBufferSizeID;
+	Int32 ShadowDepthSoftTransitionScaleID;
+	Int32 ProjectionDepthBiasParametersID;
+	Int32 bLastLightID;
 
 	LightingMaterialDataIDs()
 	{
@@ -129,18 +129,18 @@ public:
 	std::vector<Light*> Lights;
 	void Render(unsigned typeFlags);
 	std::shared_ptr<MaterialInstance> LightingPassMaterialInst;
-	unsigned int ScreenDepthZ_Tex;
-	unsigned int Lighting_Tex;
-	unsigned int Velocity_Tex;
-	unsigned int BaseColor_Tex;
-	unsigned int CustomData_Tex;
+	UInt32 ScreenDepthZ_Tex;
+	UInt32 Lighting_Tex;
+	UInt32 Velocity_Tex;
+	UInt32 BaseColor_Tex;
+	UInt32 CustomData_Tex;
 	
 	std::shared_ptr<ShadowDepth> ShadowMappingPass;
 	std::shared_ptr<ReflectionEnvironment> ReflectEnvPass; //Only active at begining
 
 private:
-	unsigned int LightingPassFrameBuffer;
-	unsigned int LightingPass_RBO;
+	UInt32 LightingPassFrameBuffer;
+	UInt32 LightingPass_RBO;
 	//void CreateLightingPassMaterial();
 	void CreateLightingPassResources();
 	
@@ -179,64 +179,64 @@ public:
 	SubSurfaceShading();
 	~SubSurfaceShading();
 
-	void ComputeTransmissionProfile(glm::vec4* TargetBuffer, glm::uint32 TargetBufferSize, glm::vec4 SubsurfaceColor, glm::vec4 FalloffColor, float ExtinctionScale);
-	void ComputeTransmissionProfile(int index, glm::vec4* TargetBuffer, glm::uint32 TargetBufferSize);
+	void ComputeTransmissionProfile(Vector4f* TargetBuffer, UInt32 TargetBufferSize, Vector4f SubsurfaceColor, Vector4f FalloffColor, Float32 ExtinctionScale);
+	void ComputeTransmissionProfile(Int32 index, Vector4f* TargetBuffer, UInt32 TargetBufferSize);
 
-	glm::vec4 GetSSSS_DUAL_SPECULAR_Params(int index);
-	glm::vec4 GetSSSS_TRANSMISSION_Params(int index);
+	Vector4f GetSSSS_DUAL_SPECULAR_Params(Int32 index);
+	Vector4f GetSSSS_TRANSMISSION_Params(Int32 index);
 
 	std::shared_ptr<MaterialInstance> SSSSetupMaterialInst;
 	std::shared_ptr<MaterialInstance> SSSScateringMaterialInst;
 	std::shared_ptr<MaterialInstance> SSSRecombineMaterialInst;
 
-	unsigned int SSSRender_Tex;
-	unsigned int SSSSetup_TexOut;
-	unsigned int SSSScatering_TexOut1;
-	unsigned int SSSScatering_TexOut2;
-	unsigned int SSSRecombine_TexOut;
-	void Render(unsigned int VAO, int NumFaces, IndexSizeType indexType = IndexSizeType::Index16Bits);
+	UInt32 SSSRender_Tex;
+	UInt32 SSSSetup_TexOut;
+	UInt32 SSSScatering_TexOut1;
+	UInt32 SSSScatering_TexOut2;
+	UInt32 SSSRecombine_TexOut;
+	void Render(UInt32 VAO, Int32 NumFaces, IndexSizeType indexType = IndexSizeType::Index16Bits);
 
 private:
 	struct FSubsurfaceProfileStruct
 	{
 		// defaults from SeparableSSS.h and the demo
-		float ScatterRadius = 0.8f;
-		glm::vec4 SubsurfaceColor = glm::vec4(0.80f, 0.78f, 0.748f, 1.0);
-		glm::vec4 FalloffColor = glm::vec4(0.735f, 0.3083f, 0.30129f, 1.0);
-		glm::vec4 BoundaryColorBleed = glm::vec4(0.735f, 0.5279f, 0.5245f, 1.0);;
-		float ExtinctionScale = 1.0f;
-		float ScatteringDistribution = 0.93f;
-		float NormalScale = 0.08f;
-		float IOR = 1.55f;
-		float Roughness0 = 0.75f;
-		float Roughness1 = 1.30f;
-		float LobeMix = 0.85f;
+		Float32 ScatterRadius = 0.8f;
+		Vector4f SubsurfaceColor = Vector4f(0.80f, 0.78f, 0.748f, 1.0);
+		Vector4f FalloffColor = Vector4f(0.735f, 0.3083f, 0.30129f, 1.0);
+		Vector4f BoundaryColorBleed = Vector4f(0.735f, 0.5279f, 0.5245f, 1.0);;
+		Float32 ExtinctionScale = 1.0f;
+		Float32 ScatteringDistribution = 0.93f;
+		Float32 NormalScale = 0.08f;
+		Float32 IOR = 1.55f;
+		Float32 Roughness0 = 0.75f;
+		Float32 Roughness1 = 1.30f;
+		Float32 LobeMix = 0.85f;
 	};
 	FSubsurfaceProfileStruct SubsurfaceProfileEntries[5];
 
 	void InitSubsurfaceProfileEntries();
-	void InitSSSSProfilekernel(int index);
+	void InitSSSSProfilekernel(Int32 index);
 
-	void ComputeMirroredSSSKernel(int index, glm::uint32 startPos, glm::uint32 TargetBufferSize, glm::vec4 SubsurfaceColor, glm::vec4 FalloffColor);
+	void ComputeMirroredSSSKernel(Int32 index, UInt32 startPos, UInt32 TargetBufferSize, Vector4f SubsurfaceColor, Vector4f FalloffColor);
 
-	static glm::vec3 SeparableSSS_Gaussian(float variance, float r, glm::vec4 FalloffColor);
-	static glm::vec3 SeparableSSS_Profile(float r, glm::vec4 FalloffColor);
+	static Vector3f SeparableSSS_Gaussian(Float32 variance, Float32 r, Vector4f FalloffColor);
+	static Vector3f SeparableSSS_Profile(Float32 r, Vector4f FalloffColor);
 
-	//std::vector<glm::vec4> SSSSMirroredProfilekernel;
-	std::unordered_map<int, std::vector<glm::vec4> > SSSSMirroredProfilekernelMap;
-	static const int QualityIndex = 3;
-	static const glm::int32 SUBSURFACE_KERNEL_SIZE = 3;
+	//std::vector<Vector4f> SSSSMirroredProfilekernel;
+	std::unordered_map<Int32, std::vector<Vector4f> > SSSSMirroredProfilekernelMap;
+	static const Int32 QualityIndex = 3;
+	static const Int32 SUBSURFACE_KERNEL_SIZE = 3;
 
 	void CreateResources();
-	void InitSSSSProfilekernelParams(std::string const & _prefix, int index);
-	unsigned int SSSFrameBuffer;
+	void InitSSSSProfilekernelParams(std::string const & _prefix, Int32 index);
+	UInt32 SSSFrameBuffer;
 };
 
 struct TemporalAAPixelUniformData
 {
-	int JitterID;
-	int PlusWeights_0ID;
-	int PlusWeights_1ID;
+	Int32 JitterID;
+	Int32 PlusWeights_0ID;
+	Int32 PlusWeights_1ID;
 	TemporalAAPixelUniformData()
 	{
 		JitterID = MaterialInstance::GetID("JitterUV"); 
@@ -255,25 +255,25 @@ public:
 
 	std::shared_ptr<MaterialInstance> TAAPassMaterialInst;
 
-	unsigned int TAAToScreenFrame_Tex;
-	unsigned int TAAHistoryFrame_Tex;
-	unsigned int TAAFrameBuffer;
+	UInt32 TAAToScreenFrame_Tex;
+	UInt32 TAAHistoryFrame_Tex;
+	UInt32 TAAFrameBuffer;
 
-	void Execute(unsigned int VAO, int NumFaces, IndexSizeType indexType = IndexSizeType::Index16Bits);
+	void Execute(UInt32 VAO, Int32 NumFaces, IndexSizeType indexType = IndexSizeType::Index16Bits);
 private:
 	std::shared_ptr<TemporalAAPixelUniformData> TAAPixelUniformData;
 
-	std::vector<glm::vec2> FrustumJitter;
-	int ActiveJitterIndex;
-	glm::vec4 ActiveJitterSample;
-	glm::mat4 JitterProjectMatrix;
-	glm::mat4 JitterProjectMatrix_PreFrame;
+	std::vector<Vector2f> FrustumJitter;
+	Int32 ActiveJitterIndex;
+	Vector4f ActiveJitterSample;
+	Mat4f JitterProjectMatrix;
+	Mat4f JitterProjectMatrix_PreFrame;
 	void InitUE4SampleType2();
 	void InitUE4SampleType4();
 
-	void HackUpdateCameraProjectMatrix(float sampleOffsetX, float sampleOffsetY);
-	void HackRemoveCameraProjectMatrix(float sampleOffsetX, float sampleOffsetY);
-	void UpdateCameraProjectMatrix(float sampleOffsetX, float sampleOffsetY);
+	void HackUpdateCameraProjectMatrix(Float32 sampleOffsetX, Float32 sampleOffsetY);
+	void HackRemoveCameraProjectMatrix(Float32 sampleOffsetX, Float32 sampleOffsetY);
+	void UpdateCameraProjectMatrix(Float32 sampleOffsetX, Float32 sampleOffsetY);
 
 private:
 	void CreateTAAPassMaterial();
@@ -282,7 +282,7 @@ private:
 
 struct ToneMappingPixelShaderUniformData
 {
-	int GrainRandomFullID;
+	Int32 GrainRandomFullID;
 	ToneMappingPixelShaderUniformData()
 	{
 		GrainRandomFullID = MaterialInstance::GetID("GrainRandomFull");
@@ -296,15 +296,15 @@ public:
 	~ToneMapping();
 
 	std::shared_ptr<MaterialInstance> ToneMappingMaterialInst;
-	void Execute(unsigned int VAO, int NumFaces, IndexSizeType indexType = IndexSizeType::Index16Bits);
+	void Execute(UInt32 VAO, Int32 NumFaces, IndexSizeType indexType = IndexSizeType::Index16Bits);
 
-	unsigned int LUT_TEX;
+	UInt32 LUT_TEX;
 	void GenerateLUTTexture(std::shared_ptr<RectBufferObject> pPObj);
 
 private:
 	void CreateToneMappingPassMaterial();
 	std::shared_ptr<ToneMappingPixelShaderUniformData> ToneMappingUniformDatas;
-	glm::vec2 GrainRandomFromFrame(int FrameCountMode8);
+	Vector2f GrainRandomFromFrame(Int32 FrameCountMode8);
 };
 
 

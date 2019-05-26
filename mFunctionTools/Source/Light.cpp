@@ -11,24 +11,24 @@ Light::~Light()
 {
 }
 
-void Light::SetColor(glm::vec3 newColor)
+void Light::SetColor(Vector3f newColor)
 {
 	Color = newColor;
 }
 
-void Light::SetShadowBias(float newBias)
+void Light::SetShadowBias(Float32 newBias)
 {
 	ShadowBias = newBias;
 }
 
-float Light::GetShadowBias()
+Float32 Light::GetShadowBias()
 {
 	return ShadowBias;
 }
 
-void Light::SetTransform(glm::vec3 position, glm::vec3 eulerAngle)
+void Light::SetTransform(Vector3f position, Vector3f eulerAngle)
 {
-	LightTransform.SetTransform(position, eulerAngle, glm::vec3(1.0));
+	LightTransform.SetTransform(position, eulerAngle, Vector3f(1.0));
 }
 
 Transform* Light::GetTransform()
@@ -39,22 +39,22 @@ Transform* Light::GetTransform()
 
 DirectLight::DirectLight()
 {
-	LightTransform.SetPosition(glm::vec3(FLT_MAX));
+	LightTransform.SetPosition(Vector3f(FLT_MAX));
 	Type = LightType::Direct;
 }
 
-DirectLight::DirectLight(glm::vec3 eulerAngles) 
+DirectLight::DirectLight(Vector3f eulerAngles) 
 {
 	LightTransform.SetEulerAngle(eulerAngles);
 	Type = LightType::Direct;
 }
 
-glm::vec3 DirectLight::GetDirection()
+Vector3f DirectLight::GetDirection()
 {
 	return -LightTransform.GetForward();
 }
 
-glm::vec3 DirectLight::GetUpDir()
+Vector3f DirectLight::GetUpDir()
 {
 	return LightTransform.GetUpward();
 }
@@ -74,34 +74,34 @@ PointLight::~PointLight()
 {
 }
 
-void PointLight::SetIntensity(float newIntensity)
+void PointLight::SetIntensity(Float32 newIntensity)
 {
 	Intensity = newIntensity;
 	Brightness = Intensity * 16.0f;
 }
 
-void PointLight::SetAttenuationRadius(float newRadius)
+void PointLight::SetAttenuationRadius(Float32 newRadius)
 {
 	AttenuationRadius = newRadius;
 	InvRadius = 1.0f / AttenuationRadius;
 }
 
-void PointLight::SetSourceRadius(float Radius)
+void PointLight::SetSourceRadius(Float32 Radius)
 {
 	SourceRadius = Radius;
 }
 
-void PointLight::SetSoftSourceRadius(float newRadius)
+void PointLight::SetSoftSourceRadius(Float32 newRadius)
 {
 	SoftSourceRadius = newRadius;
 }
 
-void PointLight::SetSourceLength(float newLength)
+void PointLight::SetSourceLength(Float32 newLength)
 {
 	SourceLength = newLength;
 }
 
-float PointLight::GetAttenuationRadius()
+Float32 PointLight::GetAttenuationRadius()
 {
 	return AttenuationRadius;
 }
@@ -112,16 +112,16 @@ void PointLight::GetShaderData(LightData &lightBuffer)
 	lightBuffer.LightInvRadius = InvRadius;
 	lightBuffer.LightColor = Color * Brightness;
 	lightBuffer.LightFallofExponent = FallofExponent;
-	lightBuffer.NormalizedLightDirection = glm::vec3(-1.0, 0.0, 0.0);
-	lightBuffer.NormalizedLightTangent = glm::vec3(0.0, 0.0, 1.0);
-	lightBuffer.LightSpotAngles = glm::vec2(-2.0f, 1.0f);
+	lightBuffer.NormalizedLightDirection = Vector3f(-1.0, 0.0, 0.0);
+	lightBuffer.NormalizedLightTangent = Vector3f(0.0, 0.0, 1.0);
+	lightBuffer.LightSpotAngles = Vector2f(-2.0f, 1.0f);
 	lightBuffer.LightSourceRadius = SourceRadius;
 	lightBuffer.LightSourceLength = SourceLength;
 	lightBuffer.LightSoftSourceRadius = SoftSourceRadius;
 	lightBuffer.LightSpecularScale = SpecularScale;
 	lightBuffer.LightContactShadowLength = 0.0;
-	lightBuffer.LightDistanceFadeMAD = glm::vec2(0.0f);
-	lightBuffer.LightShadowMapChannelMask = glm::vec4(0.0f);
+	lightBuffer.LightDistanceFadeMAD = Vector2f(0.0f);
+	lightBuffer.LightShadowMapChannelMask = Vector4f(0.0f);
 	lightBuffer.LightShadowedBits = 3;
 	lightBuffer.LightType = 2;
 }
@@ -135,12 +135,12 @@ SpotLight::~SpotLight()
 {
 }
 
-glm::vec3 SpotLight::GetDirection()
+Vector3f SpotLight::GetDirection()
 {
 	return -LightTransform.GetForward();
 }
 
-glm::vec3 SpotLight::GetUpDir()
+Vector3f SpotLight::GetUpDir()
 {
 	return LightTransform.GetUpward();
 }
@@ -153,33 +153,33 @@ void SpotLight::GetShaderData(LightData &lightBuffer)
 	lightBuffer.LightFallofExponent = FallofExponent;
 	lightBuffer.NormalizedLightDirection = GetDirection();
 	lightBuffer.NormalizedLightTangent = LightTransform.GetUpward();
-	lightBuffer.LightSpotAngles = glm::vec2(CosOuterCone, InvCosConeDifference);
+	lightBuffer.LightSpotAngles = Vector2f(CosOuterCone, InvCosConeDifference);
 	lightBuffer.LightSourceRadius = SourceRadius;
 	lightBuffer.LightSourceLength = SourceLength;
 	lightBuffer.LightSoftSourceRadius = SoftSourceRadius;
 	lightBuffer.LightSpecularScale = SpecularScale;
 	lightBuffer.LightContactShadowLength = 0.0;
-	lightBuffer.LightDistanceFadeMAD = glm::vec2(0.0f);
-	lightBuffer.LightShadowMapChannelMask = glm::vec4(0.0f);
+	lightBuffer.LightDistanceFadeMAD = Vector2f(0.0f);
+	lightBuffer.LightShadowMapChannelMask = Vector4f(0.0f);
 	lightBuffer.LightShadowedBits = 3;
 	lightBuffer.LightType = 1;
 }
 
-void SpotLight::SetInnerConeAngle(float Degree)
+void SpotLight::SetInnerConeAngle(Float32 Degree)
 {
 	InnerConeAngle = Degree;
-	CosInnerCone = glm::cos(InnerConeAngle / 180.0f * 3.14159265358979323846264338327950288f);
+	CosInnerCone = Math::Cos(InnerConeAngle / 180.0f * 3.14159265358979323846264338327950288f);
 	InvCosConeDifference = 1.0f / (CosInnerCone - CosOuterCone);
 }
 
-void SpotLight::SetOuterConeAngle(float Degree)
+void SpotLight::SetOuterConeAngle(Float32 Degree)
 {
 	OuterConeAngle = Degree;
-	CosOuterCone = glm::cos(OuterConeAngle / 180.0f * 3.14159265358979323846264338327950288f);
+	CosOuterCone = Math::Cos(OuterConeAngle / 180.0f * 3.14159265358979323846264338327950288f);
 	InvCosConeDifference = 1.0f / (CosInnerCone - CosOuterCone);
 }
 
-float SpotLight::GetOutConeAngle()
+Float32 SpotLight::GetOutConeAngle()
 {
 	return OuterConeAngle;
 }

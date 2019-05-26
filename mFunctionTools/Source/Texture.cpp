@@ -74,12 +74,12 @@ Texture::Texture(std::string file, TextureParameter minParm, TextureParameter ma
 	//			TF_G16R16,
 	//			TF_A16B16G16R16,
 	//
-	//			// 16-bit floating-point formats ('half float' channels).
+	//			// 16-bit floating-point formats ('half Float32' channels).
 	//			TF_R16F,
 	//			TF_G16R16F,
 	//			TF_A16B16G16R16F,
 	//
-	//			// 32-bit floating-point formats ('float' channels).
+	//			// 32-bit floating-point formats ('Float32' channels).
 	//			TF_R32F,
 	//			TF_G32R32F,
 	//			TF_B32G32R32F,
@@ -247,12 +247,12 @@ Texture::Texture(std::string file, TextureParameter minParm, TextureParameter ma
 	//			// ok, let's load the file
 	//			FIBITMAP *dib = FreeImage_Load(fif, path.c_str());
 	//
-	//			int numBitsPerPixel = FreeImage_GetBPP(dib);
+	//			Int32 numBitsPerPixel = FreeImage_GetBPP(dib);
 	//			Format pformat;
-	//			int imatype = FreeImage_GetImageType(dib);
+	//			Int32 imatype = FreeImage_GetImageType(dib);
 	//
-	//			int dimension0 = FreeImage_GetWidth(dib);
-	//			int dimension1 = FreeImage_GetHeight(dib);
+	//			Int32 dimension0 = FreeImage_GetWidth(dib);
+	//			Int32 dimension1 = FreeImage_GetHeight(dib);
 	//
 	//			{
 	//				if (numBitsPerPixel / 8 == 1) {
@@ -301,17 +301,17 @@ Texture::Texture(std::string file, TextureParameter minParm, TextureParameter ma
 	//
 	//			}
 	//			BYTE* bits = nullptr;
-	//			int  width = FreeImage_GetWidth(dib);
-	//			int  height = FreeImage_GetHeight(dib);
+	//			Int32  width = FreeImage_GetWidth(dib);
+	//			Int32  height = FreeImage_GetHeight(dib);
 	//
 	//			bits = FreeImage_GetBits(dib);
 	//			glBindTexture(GL_TEXTURE_2D, 0);
 	//			/*	FIBITMAP *bitmap = FreeImage_Allocate(1024, 1024, 24);
 	//				uint8_t laztchar = bits[4096 * 4095 + 4095];
-	//				for (int y = 0; y < 1024; y++)
+	//				for (Int32 y = 0; y < 1024; y++)
 	//				{
 	//					BYTE *bits0 = FreeImage_GetScanLine(bitmap, y);
-	//					for (int x = 0; x < 1024; x++)
+	//					for (Int32 x = 0; x < 1024; x++)
 	//					{
 	//						bits0[0] = bits[(y * 1024 + x) * 3 + 0];
 	//						bits0[1] = bits[(y * 1024 + x) * 3 + 1];
@@ -321,7 +321,7 @@ Texture::Texture(std::string file, TextureParameter minParm, TextureParameter ma
 	//					}
 	//
 	//				}
-	//				bool bSuccess = FreeImage_Save(FIF_PNG, bitmap, "testpng.png", PNG_DEFAULT);
+	//				Bool bSuccess = FreeImage_Save(FIF_PNG, bitmap, "testpng.png", PNG_DEFAULT);
 	//				FreeImage_Unload(bitmap);*/
 	//				//get the image width and height
 	//
@@ -330,7 +330,7 @@ Texture::Texture(std::string file, TextureParameter minParm, TextureParameter ma
 	//				return ;
 	//
 	//
-	//			//unsigned int textureID;
+	//			//UInt32 textureID;
 	//			glGenTextures(1, &GPUId);
 	//			//bind to the new texture ID
 	//			glBindTexture(GL_TEXTURE_2D, GPUId);
@@ -412,7 +412,7 @@ Texture::Texture(std::string file, TextureParameter minParm, TextureParameter ma
 
 Texture::~Texture()
 {
-	for (unsigned int Mip = 0; Mip < RawTextureDataPtrs.size(); Mip++)
+	for (UInt32 Mip = 0; Mip < RawTextureDataPtrs.size(); Mip++)
 	{
 		delete[] RawTextureDataPtrs[Mip]->MipData;
 		RawTextureDataPtrs[Mip]->MipData = nullptr;
@@ -547,9 +547,9 @@ static GLuint gOGLTextureType[TF_QUANTITY] =
 
 void Texture::CreateGPUObject(TextureParameter mipParm, TextureParameter magParm, TextureParameter wrapParmU, TextureParameter wrapParmV)
 {
-	unsigned int GL_PixelStorageFormat = gOGLTextureInternalFormat[TypeFormat];
-	unsigned int GL_PixelDataFormat = gOGLTextureFormat[TypeFormat];
-	unsigned int GL_PixelDataType = gOGLTextureType[TypeFormat];
+	UInt32 GL_PixelStorageFormat = gOGLTextureInternalFormat[TypeFormat];
+	UInt32 GL_PixelDataFormat = gOGLTextureFormat[TypeFormat];
+	UInt32 GL_PixelDataType = gOGLTextureType[TypeFormat];
 
 	/*switch (TypeFormat)
 	{
@@ -575,11 +575,11 @@ void Texture::CreateGPUObject(TextureParameter mipParm, TextureParameter magParm
 	default:
 		break;
 	}*/
-	int NumMip = RawTextureDataPtrs.size();
+	Int32 NumMip = (Int32) RawTextureDataPtrs.size();
 	glGenTextures(1, &GPUId);
 	glBindTexture(GL_TEXTURE_2D, GPUId);
 	glTexStorage2D(GL_TEXTURE_2D, NumMip, GL_PixelStorageFormat, Width, Height);
-	for (int Mip = 0; Mip < NumMip; Mip++)
+	for (Int32 Mip = 0; Mip < NumMip; Mip++)
 	{
 		glTexSubImage2D(GL_TEXTURE_2D, Mip, 0, 0, RawTextureDataPtrs[Mip]->Width, RawTextureDataPtrs[Mip]->Height, GL_PixelDataFormat, GL_PixelDataType, RawTextureDataPtrs[Mip]->MipData);
 	}
@@ -655,9 +655,9 @@ void Texture::CreateGPUObject(TextureParameter mipParm, TextureParameter magParm
 
 void Texture::UpdateGPUObjectData()
 {
-	unsigned int GL_PixelStorageFormat = gOGLTextureInternalFormat[TypeFormat];
-	unsigned int GL_PixelDataFormat = gOGLTextureFormat[TypeFormat];
-	unsigned int GL_PixelDataType = gOGLTextureType[TypeFormat];
+	UInt32 GL_PixelStorageFormat = gOGLTextureInternalFormat[TypeFormat];
+	UInt32 GL_PixelDataFormat = gOGLTextureFormat[TypeFormat];
+	UInt32 GL_PixelDataType = gOGLTextureType[TypeFormat];
 
 	/*switch (TypeFormat)
 	{
@@ -671,66 +671,66 @@ void Texture::UpdateGPUObjectData()
 	}*/
 
 	glBindTexture(GL_TEXTURE_2D, GPUId);
-	for (unsigned int Mip = 0; Mip < RawTextureDataPtrs.size(); Mip++)
+	for (UInt32 Mip = 0; Mip < RawTextureDataPtrs.size(); Mip++)
 	{
 		glTexSubImage2D(GL_TEXTURE_2D, Mip, 0, 0, RawTextureDataPtrs[Mip]->Width, RawTextureDataPtrs[Mip]->Height, GL_PixelDataFormat, GL_PixelDataType, RawTextureDataPtrs[Mip]->MipData);
 	}
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-int Texture::GetWidth()
+Int32 Texture::GetWidth()
 {
 	return Width;
 }
 
-int Texture::GetHeight()
+Int32 Texture::GetHeight()
 {
 	return Height;
 }
 
-std::shared_ptr<RawTextureData> Texture::GetRawDataPtr(int Mip)
+std::shared_ptr<RawTextureData> Texture::GetRawDataPtr(Int32 Mip)
 {
 	return RawTextureDataPtrs[Mip];
 }
 
-int Texture::GetNumMip()
+Int32 Texture::GetNumMip()
 {
-	return RawTextureDataPtrs.size();
+	return (Int32)RawTextureDataPtrs.size();
 }
 
-//void Texture::InitMipRawTextureData(int width, int height, TextureDataTypeFormat typeFormat)
+//void Texture::InitMipRawTextureData(Int32 width, Int32 height, TextureDataTypeFormat typeFormat)
 //{
 //	Width = width;
 //	Height = height;
 //	TypeFormat = typeFormat;
 //
-//	int NumMips = 0;
-//	while ((int)min(width, height) >> NumMips)
+//	Int32 NumMips = 0;
+//	while ((Int32)min(width, height) >> NumMips)
 //	{
 //		NumMips++;
 //	}
 //
 //	RawTextureDataPtrs = std::vector<std::shared_ptr<RawTextureData>>(NumMips);
-//	for (int Mip = 0; Mip < NumMips; Mip++)
+//	for (Int32 Mip = 0; Mip < NumMips; Mip++)
 //	{
 //		RawTextureDataPtrs[Mip] = std::shared_ptr<RawTextureData>(new RawTextureData());
-//		int MipTexSizeU = Width >> Mip;
-//		int MipTexSizeV = Height >> Mip;
+//		Int32 MipTexSizeU = Width >> Mip;
+//		Int32 MipTexSizeV = Height >> Mip;
 //		RawTextureDataPtrs[Mip]->Width = MipTexSizeU;
 //		RawTextureDataPtrs[Mip]->Height = MipTexSizeV;
 //
 //		switch (typeFormat)
 //		{
 //		case RGBA8:
-//			RawTextureDataPtrs[Mip]->MipData = new unsigned char[MipTexSizeU * MipTexSizeV * 4];
+//			RawTextureDataPtrs[Mip]->MipData = new UInt8[MipTexSizeU * MipTexSizeV * 4];
 //			memset(RawTextureDataPtrs[Mip]->MipData, 0, MipTexSizeU * MipTexSizeV * 4);
 //			break;
 //		case R8:
-//			RawTextureDataPtrs[Mip]->MipData = new unsigned char[MipTexSizeU * MipTexSizeV];
+//			RawTextureDataPtrs[Mip]->MipData = new UInt8[MipTexSizeU * MipTexSizeV];
 //			memset(RawTextureDataPtrs[Mip]->MipData, 0, MipTexSizeU * MipTexSizeV);
 //			break;
 //		case RG8:
-//			RawTextureDataPtrs[Mip]->MipData = new unsigned char[MipTexSizeU * MipTexSizeV * 2];
+//			RawTextureDataPtrs[Mip]->MipData = new UInt8[MipTexSizeU * MipTexSizeV * 2];
 //			memset(RawTextureDataPtrs[Mip]->MipData, 0, MipTexSizeU * MipTexSizeV * 2);
 //			break;
 //		default:
@@ -739,7 +739,7 @@ int Texture::GetNumMip()
 //	}
 //}
 //
-//void Texture::InitNoMipRawTextureData(int width, int height, TextureDataTypeFormat typeFormat)
+//void Texture::InitNoMipRawTextureData(Int32 width, Int32 height, TextureDataTypeFormat typeFormat)
 //{
 //	Width = width;
 //	Height = height;
@@ -752,15 +752,15 @@ int Texture::GetNumMip()
 //	switch (typeFormat)
 //	{
 //	case RGBA8:
-//		RawTextureDataPtrs[0]->MipData = new unsigned char[Width * Height * 4];
+//		RawTextureDataPtrs[0]->MipData = new UInt8[Width * Height * 4];
 //		memset(RawTextureDataPtrs[0]->MipData, 0, Width * Height * 4);
 //		break;
 //	case R8:
-//		RawTextureDataPtrs[0]->MipData = new unsigned char[Width * Height];
+//		RawTextureDataPtrs[0]->MipData = new UInt8[Width * Height];
 //		memset(RawTextureDataPtrs[0]->MipData, 0, Width* Height);
 //		break;
 //	case RG8:
-//		RawTextureDataPtrs[0]->MipData = new unsigned char[Width * Height * 2];
+//		RawTextureDataPtrs[0]->MipData = new UInt8[Width * Height * 2];
 //		memset(RawTextureDataPtrs[0]->MipData, 0, Width * Height * 2);
 //		break;
 //	default:
@@ -781,12 +781,12 @@ FREE_IMAGE_FORMAT Texture::GetFileType(std::string const& file)
 }
 TextureDataTypeFormat Texture::GetTextureType(FIBITMAP *dib)
 {
-	int numBitsPerPixel = FreeImage_GetBPP(dib);
+	Int32 numBitsPerPixel = FreeImage_GetBPP(dib);
 	TextureDataTypeFormat pformat;
-	int imatype = FreeImage_GetImageType(dib);
+	Int32 imatype = FreeImage_GetImageType(dib);
 
-	int dimension0 = FreeImage_GetWidth(dib);
-	int dimension1 = FreeImage_GetHeight(dib);
+	Int32 dimension0 = FreeImage_GetWidth(dib);
+	Int32 dimension1 = FreeImage_GetHeight(dib);
 
 	{
 		if (numBitsPerPixel / 8 == 1) {
@@ -838,7 +838,7 @@ TextureDataTypeFormat Texture::GetTextureType(FIBITMAP *dib)
 }
 void Texture::LoadTextureFromAsset(std::string const&file)
 {
-	int width, height, nrComponents;
+	Int32 width, height, nrComponents;
 
 
 	FREE_IMAGE_FORMAT fif = GetFileType(file);
@@ -846,7 +846,7 @@ void Texture::LoadTextureFromAsset(std::string const&file)
 		// ok, let's load the file
 		FIBITMAP *dib = FreeImage_Load(fif, file.c_str());
 
-		int numBitsPerPixel = FreeImage_GetBPP(dib);
+		Int32 numBitsPerPixel = FreeImage_GetBPP(dib);
 		TextureDataTypeFormat pformat = GetTextureType(dib);
 		TypeFormat = pformat;
 		BYTE* bits = FreeImage_GetBits(dib);
@@ -855,13 +855,13 @@ void Texture::LoadTextureFromAsset(std::string const&file)
 		RawTextureDataPtrs.reserve(1);
 		RawTextureDataPtrs.resize(1);
 
-		int MipWidth = Width;
-		int MipHeight = Height;
+		Int32 MipWidth = Width;
+		Int32 MipHeight = Height;
 		RawTextureDataPtrs[0] = std::shared_ptr<RawTextureData>(new RawTextureData());
 		RawTextureDataPtrs[0]->Width = MipWidth;
 		RawTextureDataPtrs[0]->Height = MipHeight;
-		unsigned int size = MipWidth * MipHeight * numBitsPerPixel / 8;
-		RawTextureDataPtrs[0]->MipData = new unsigned char[size];
+		UInt32 size = MipWidth * MipHeight * numBitsPerPixel / 8;
+		RawTextureDataPtrs[0]->MipData = new UInt8[size];
 		memcpy(RawTextureDataPtrs[0]->MipData, bits/*data*/, size);
 		FreeImage_Unload(dib);
 		//stbi_image_free(data);
@@ -870,14 +870,14 @@ void Texture::LoadTextureFromAsset(std::string const&file)
 
 
 }
-//unsigned int Texture::CreateCompositeTexture(float compositepower, bool useGPU, Channel AddToChanel, std::string compositeTexFilePath)
+//UInt32 Texture::CreateCompositeTexture(Float32 compositepower, Bool useGPU, Channel AddToChanel, std::string compositeTexFilePath)
 //{
-//	int width, height, nrComponents;
+//	Int32 width, height, nrComponents;
 //	if (compositeTexFilePath.empty())
 //	{
 //		return 0;
 //	}
-//	//int num_cpu = std::thread::hardware_concurrency();
+//	//Int32 num_cpu = std::thread::hardware_concurrency();
 //	if (useGPU)
 //	{
 //		if (!glIsTexture(this->GPUId))
@@ -889,12 +889,12 @@ void Texture::LoadTextureFromAsset(std::string const&file)
 //		std::shared_ptr<Framebuffer2D> composite_RT = std::make_shared<Framebuffer2D>(Width, Height);
 //		composite_RT->attachBuffer(FBO_COLOR0, GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE, GL_LINEAR, GL_LINEAR);
 //
-//		unsigned int quadvao;
+//		UInt32 quadvao;
 //		{
 //			typedef struct
 //			{
-//				glm::vec3 position;
-//				glm::vec2 texCoord;
+//				Vector3f position;
+//				Vector2f texCoord;
 //			}QuadVertex;
 //
 //			std::vector<QuadVertex> vertices;
@@ -903,10 +903,10 @@ void Texture::LoadTextureFromAsset(std::string const&file)
 //
 //			QuadVertex v;
 //
-//			v.position = glm::vec3(-1, -1, 0); v.texCoord = glm::vec2(0, 0); vertices.push_back(v);
-//			v.position = glm::vec3(1, -1, 0);  v.texCoord = glm::vec2(1, 0); vertices.push_back(v);
-//			v.position = glm::vec3(1, 1, 0);   v.texCoord = glm::vec2(1, 1); vertices.push_back(v);
-//			v.position = glm::vec3(-1, 1, 0);  v.texCoord = glm::vec2(0, 1); vertices.push_back(v);
+//			v.position = Vector3f(-1, -1, 0); v.texCoord = Vector2f(0, 0); vertices.push_back(v);
+//			v.position = Vector3f(1, -1, 0);  v.texCoord = Vector2f(1, 0); vertices.push_back(v);
+//			v.position = Vector3f(1, 1, 0);   v.texCoord = Vector2f(1, 1); vertices.push_back(v);
+//			v.position = Vector3f(-1, 1, 0);  v.texCoord = Vector2f(0, 1); vertices.push_back(v);
 //
 //
 //			triangles.push_back(glm::uvec3(0, 1, 2));
@@ -922,9 +922,9 @@ void Texture::LoadTextureFromAsset(std::string const&file)
 //
 //			//	GLint posLoc = 0, GLint texLoc = 1;
 //			glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(QuadVertex), &vertices[0].position[0], GL_STATIC_DRAW);
-//			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(QuadVertex), (char*)NULL);
+//			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(QuadVertex), (Int8*)NULL);
 //			glEnableVertexAttribArray(0);
-//			glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(QuadVertex), (char*)NULL + 3 * sizeof(glm::f32));
+//			glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(QuadVertex), (Int8*)NULL + 3 * sizeof(glm::f32));
 //			glEnableVertexAttribArray(1);
 //
 //			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo_triangle);
@@ -939,7 +939,7 @@ void Texture::LoadTextureFromAsset(std::string const&file)
 //		std::shared_ptr<MaterialInstance> composite_instance = std::shared_ptr<MaterialInstance>(new MaterialInstance(composite_shader));
 //
 //		composite_instance->SetTextureID("normaltex", this->GPUId);
-//		composite_instance->SetUniform("addToChanel", (int)AddToChanel);
+//		composite_instance->SetUniform("addToChanel", (Int32)AddToChanel);
 //		composite_instance->SetUniform("compositepower", compositepower);
 //
 //		glClear(GL_COLOR_BUFFER_BIT);
@@ -966,10 +966,10 @@ void Texture::LoadTextureFromAsset(std::string const&file)
 //		glBindTexture(GL_TEXTURE_2D, composite_RT->getBufferHandle(FBO_COLOR0));
 //		glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE, m_pBGRBuf);
 //		FIBITMAP *bitmap = FreeImage_Allocate(composite_RT->getWidth(), composite_RT->getWidth(), 24);
-//		for (int y = 0; y < composite_RT->getWidth(); y++)
+//		for (Int32 y = 0; y < composite_RT->getWidth(); y++)
 //		{
 //			BYTE *bits0 = FreeImage_GetScanLine(bitmap, y);
-//			for (int x = 0; x < composite_RT->getWidth(); x++)
+//			for (Int32 x = 0; x < composite_RT->getWidth(); x++)
 //			{
 //				auto colorM = m_pBGRBuf[y*composite_RT->getWidth() + x];
 //				bits0[0] = colorM.r;
@@ -979,33 +979,33 @@ void Texture::LoadTextureFromAsset(std::string const&file)
 //				bits0 += 3;
 //			}
 //		}
-//		bool bSuccess = FreeImage_Save(FIF_TIFF, bitmap, "Toksvig_mesoNormal.tif", TIFF_DEFAULT);
+//		Bool bSuccess = FreeImage_Save(FIF_TIFF, bitmap, "Toksvig_mesoNormal.tif", TIFF_DEFAULT);
 //		FreeImage_Unload(bitmap);*/
 //		glViewport(PrevViewport[0], PrevViewport[1], PrevViewport[2], PrevViewport[3]);
 //		return composite_RT->getBufferHandle(FBO_COLOR0);
 //	}
-//	unsigned char *composite_tex_data = stbi_load((AssetFolderPath + compositeTexFilePath).c_str(), &width, &height, &nrComponents, 0);
+//	UInt8 *composite_tex_data = stbi_load((AssetFolderPath + compositeTexFilePath).c_str(), &width, &height, &nrComponents, 0);
 //	RawTextureDataPtrs.reserve(1);
 //	RawTextureDataPtrs.resize(1);
-//	int MipWidth = width;
-//	int MipHeight = height;
+//	Int32 MipWidth = width;
+//	Int32 MipHeight = height;
 //	RawTextureDataPtrs[0] = std::shared_ptr<RawTextureData>(new RawTextureData());
 //	RawTextureDataPtrs[0]->Width = MipWidth;
 //	RawTextureDataPtrs[0]->Height = MipHeight;
 //	TypeFormat = TextureDataTypeFormat::TF_R8G8B8;
-//	RawTextureDataPtrs[0]->MipData = new unsigned char[MipWidth * MipHeight * 3];
+//	RawTextureDataPtrs[0]->MipData = new UInt8[MipWidth * MipHeight * 3];
 //
 //
 //	FImageKernel2D KernelDownsample;
 //	// /2 as input resolution is same as output resolution and the settings assumed the output is half resolution
 //	KernelDownsample.BuildSeparatableGaussWithSharpen(2, -4.0);
-//	const glm::int32 KernelCenter = (glm::int32)KernelDownsample.GetFilterTableSize() / 2 - 1;
-//	auto GetSafeNormal = [](glm::dvec3 Normal, float Tolerance) ->glm::dvec3
+//	const Int32 KernelCenter = (Int32)KernelDownsample.GetFilterTableSize() / 2 - 1;
+//	auto GetSafeNormal = [](glm::dvec3 Normal, Float32 Tolerance) ->glm::dvec3
 //	{
-//		float X = Normal.x;
-//		float Y = Normal.y;
-//		float Z = Normal.z;
-//		const float SquareSum = X * X + Y * Y + Z * Z;
+//		Float32 X = Normal.x;
+//		Float32 Y = Normal.y;
+//		Float32 Z = Normal.z;
+//		const Float32 SquareSum = X * X + Y * Y + Z * Z;
 //
 //		// Not sure if it's safe to add tolerance in there. Might introduce too many errors
 //		if (SquareSum == 1.f)
@@ -1016,34 +1016,34 @@ void Texture::LoadTextureFromAsset(std::string const&file)
 //		{
 //			return glm::dvec3(0.0);
 //		}
-//		const float Scale = glm::inversesqrt(SquareSum);
+//		const Float32 Scale = glm::inversesqrt(SquareSum);
 //		return glm::dvec3(X*Scale, Y*Scale, Z*Scale);
 //	};
-//	const float SMALL_NUMBER = (1.e-8f);
-//	for (int y = 0; y < height; y++)
+//	const Float32 SMALL_NUMBER = (1.e-8f);
+//	for (Int32 y = 0; y < height; y++)
 //	{
-//		for (int x = 0; x < width; x++)
+//		for (Int32 x = 0; x < width; x++)
 //		{
-//			int SourceX = x;
-//			int SourceY = y;
-//			glm::dvec3 FilteredColor = glm::vec3(0.0);
+//			Int32 SourceX = x;
+//			Int32 SourceY = y;
+//			glm::dvec3 FilteredColor = Vector3f(0.0);
 //
-//			for (glm::uint32 KernelY = 0; KernelY < KernelDownsample.GetFilterTableSize(); ++KernelY)
+//			for (UInt32 KernelY = 0; KernelY < KernelDownsample.GetFilterTableSize(); ++KernelY)
 //			{
-//				for (glm::uint32 KernelX = 0; KernelX < KernelDownsample.GetFilterTableSize(); ++KernelX)
+//				for (UInt32 KernelX = 0; KernelX < KernelDownsample.GetFilterTableSize(); ++KernelX)
 //				{
-//					float Weight = KernelDownsample.GetAt(KernelX, KernelY);
-//					int samplex = SourceX + KernelX - KernelCenter;
-//					int sampley = SourceY + KernelY - KernelCenter;
-//					samplex = (glm::int32)((glm::uint32)samplex) & (width - 1);
-//					sampley = (glm::int32)((glm::uint32)sampley) & (height - 1);
-//					int r0 = composite_tex_data[((height - sampley)* width + samplex) * 3 + 0];
-//					int g0 = composite_tex_data[((height - sampley)* width + samplex) * 3 + 1];
-//					int b0 = composite_tex_data[((height - sampley)* width + samplex) * 3 + 2];
+//					Float32 Weight = KernelDownsample.GetAt(KernelX, KernelY);
+//					Int32 samplex = SourceX + KernelX - KernelCenter;
+//					Int32 sampley = SourceY + KernelY - KernelCenter;
+//					samplex = (Int32)((UInt32)samplex) & (width - 1);
+//					sampley = (Int32)((UInt32)sampley) & (height - 1);
+//					Int32 r0 = composite_tex_data[((height - sampley)* width + samplex) * 3 + 0];
+//					Int32 g0 = composite_tex_data[((height - sampley)* width + samplex) * 3 + 1];
+//					Int32 b0 = composite_tex_data[((height - sampley)* width + samplex) * 3 + 2];
 //
-//					float testvarR = (((float)(r0) / 255.0f));
-//					float testvarG = (((float)(g0) / 255.0f));
-//					float testvarB = (((float)(b0) / 255.0f));
+//					Float32 testvarR = (((Float32)(r0) / 255.0f));
+//					Float32 testvarG = (((Float32)(g0) / 255.0f));
+//					Float32 testvarB = (((Float32)(b0) / 255.0f));
 //					glm::dvec3 Normal = glm::dvec3(testvarB, testvarG, testvarR);
 //					Normal = glm::dvec3(Normal.r * 2.0f - 1.0f, Normal.g * 2.0f - 1.0f, Normal.b * 2.0f - 1.0f);
 //					Normal = GetSafeNormal(Normal, SMALL_NUMBER);
@@ -1052,30 +1052,30 @@ void Texture::LoadTextureFromAsset(std::string const&file)
 //				}
 //			}
 //			glm::dvec3 Normal = FilteredColor;
-//			float power = compositepower;
+//			Float32 power = compositepower;
 //			Normal.z = Normal.z*2.0 - 1.0;
 //			Normal.x = Normal.x*2.0 - 1.0;
 //			Normal.y = Normal.y*2.0 - 1.0;
 //
-//			float ns = glm::length(Normal);
+//			Float32 ns = glm::length(Normal);
 //
-//			float lengthN = ns < 1.0 ? ns : 1.0;
+//			Float32 lengthN = ns < 1.0 ? ns : 1.0;
 //
-//			float Variance = (1.0f - lengthN) / lengthN;
+//			Float32 Variance = (1.0f - lengthN) / lengthN;
 //
 //			Variance = 0.0 > (Variance - 0.00004) ? 0.0 : (Variance - 0.00004);
 //			Variance *= power;
 //
-//			float rougnness = 0.0;
+//			Float32 rougnness = 0.0;
 //
-//			float B0 = 2.0 *Variance*(-1.0);
+//			Float32 B0 = 2.0 *Variance*(-1.0);
 //
-//			float a2 = B0 / (B0 - 1.0);
+//			Float32 a2 = B0 / (B0 - 1.0);
 //
 //			rougnness = std::pow(a2, 0.25);
 //
-//			int colorg = (int)(255.0 *(rougnness));
-//			int index = ((y)* width + x) * 3;
+//			Int32 colorg = (Int32)(255.0 *(rougnness));
+//			Int32 index = ((y)* width + x) * 3;
 //			RawTextureDataPtrs[0]->MipData[index + 0] = 0;
 //			RawTextureDataPtrs[0]->MipData[index + 1] = 0;
 //			RawTextureDataPtrs[0]->MipData[index + 2] = 0;
@@ -1083,7 +1083,7 @@ void Texture::LoadTextureFromAsset(std::string const&file)
 //			//bits0[0] = RawTextureDataPtrs[0]->MipData[index + 0]; composite_tex_data[((y)* width + x) * 3 + 0];
 //			//bits0[1] = RawTextureDataPtrs[0]->MipData[index + 1]; composite_tex_data[((y)* width + x) * 3 + 1];
 //			//bits0[2] = RawTextureDataPtrs[0]->MipData[index + 2]; composite_tex_data[((y)* width + x) * 3 + 2];
-//			////bits0[3] = 0; (int)(255.0 *(testvarB));
+//			////bits0[3] = 0; (Int32)(255.0 *(testvarB));
 //			//bits0 += 3;
 //		}
 //	}

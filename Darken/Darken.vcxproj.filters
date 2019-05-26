@@ -30,9 +30,6 @@
     <ClInclude Include="..\mFunctionTools\Include\DeferRenderPipeline.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="..\mFunctionTools\Include\Framebuffer2D.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="..\mFunctionTools\Include\GlobalPram.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -78,6 +75,9 @@
     <ClInclude Include="..\mFunctionTools\Include\Util.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="..\mFunctionTools\Include\TypeDefine.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -93,9 +93,6 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="..\mFunctionTools\Source\DeferRenderPipeline.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="..\mFunctionTools\Source\Framebuffer2D.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="..\mFunctionTools\Source\Light.cpp">

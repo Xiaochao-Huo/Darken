@@ -6,10 +6,10 @@ class RectBufferObject
 public:
 	RectBufferObject();
 	~RectBufferObject();
-	unsigned int VAO;
-	unsigned int VBO;
-	unsigned int IBO;
-	int NumFaces;
+	UInt32 VAO;
+	UInt32 VBO;
+	UInt32 IBO;
+	Int32 NumFaces;
 	IndexSizeType IndexType;
 private:
 

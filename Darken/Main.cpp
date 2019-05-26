@@ -10,7 +10,7 @@
 #include "ReflectionCapture.h"
 #include "SystemTextures.h"
 
-void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+void framebuffer_size_callback(GLFWwindow* window, Int32 width, Int32 height);
 void processInput(GLFWwindow *window);
 
 // settings
@@ -20,18 +20,18 @@ std::shared_ptr<SceneManager> _Scene;
 std::shared_ptr<BufferManager> _GPUBuffers;
 std::shared_ptr<SystemTextureFactory> GlobalTextures;
 
-const unsigned int _ScreenWidth = 1200;
-const unsigned int _ScreenHeight = 900;
+const UInt32 _ScreenWidth = 1200;
+const UInt32 _ScreenHeight = 900;
 
-unsigned int APP_DeltaTime = 0;
+UInt32 APP_DeltaTime = 0;
 unsigned long APP_FrameCount = 0;
 
-bool bPause = false;
+Bool bPause = false;
 
 void CameraRotateLeftPlus()
 {
 	std::shared_ptr<Camera> camera = _Scene->GetCamera(CameraIndex::MainCamera);
-	glm::vec3 angles = camera->GetEulerAngle();
+	Vector3f angles = camera->GetEulerAngle();
 	angles.z -= 1.0f;
 	camera->SetEulerAngle(angles);
 }
@@ -39,14 +39,14 @@ void CameraRotateLeftPlus()
 void CameraRotateLeftMinus()
 {
 	std::shared_ptr<Camera> camera = _Scene->GetCamera(CameraIndex::MainCamera);
-	glm::vec3 angles = camera->GetEulerAngle();
+	Vector3f angles = camera->GetEulerAngle();
 	angles.z += 1.0f;
 	camera->SetEulerAngle(angles);
 }
 void CameraRotateUpPlus()
 {
 	std::shared_ptr<Camera> camera = _Scene->GetCamera(CameraIndex::MainCamera);
-	glm::vec3 angles = camera->GetEulerAngle();
+	Vector3f angles = camera->GetEulerAngle();
 	angles.y += 1.0f;
 	camera->SetEulerAngle(angles);
 }
@@ -54,7 +54,7 @@ void CameraRotateUpPlus()
 void CameraRotateUpMinus()
 {
 	std::shared_ptr<Camera> camera = _Scene->GetCamera(CameraIndex::MainCamera);
-	glm::vec3 angles = camera->GetEulerAngle();
+	Vector3f angles = camera->GetEulerAngle();
 	angles.y -= 1.0f;
 	camera->SetEulerAngle(angles);
 }
@@ -62,33 +62,33 @@ void CameraRotateUpMinus()
 void CameraTranslateLeftPlus()
 {
 	std::shared_ptr<Camera> camera = _Scene->GetCamera(CameraIndex::MainCamera);
-	glm::vec3 left = camera->GetLeftward();
-	glm::vec3 position = camera->GetPosition();
+	Vector3f left = camera->GetLeftward();
+	Vector3f position = camera->GetPosition();
 	camera->SetPosition(position + left * 0.2f);
 }
 void CameraTranslateLeftMinus()
 {
 	std::shared_ptr<Camera> camera = _Scene->GetCamera(CameraIndex::MainCamera);
-	glm::vec3 left = camera->GetLeftward();
-	glm::vec3 position = camera->GetPosition();
+	Vector3f left = camera->GetLeftward();
+	Vector3f position = camera->GetPosition();
 	camera->SetPosition(position - left * 0.2f);
 	bPause = true;
 }
 void CameraTranslateForwardPlus()
 {
 	std::shared_ptr<Camera> camera = _Scene->GetCamera(CameraIndex::MainCamera);
-	glm::vec3 forward = camera->GetForward();
+	Vector3f forward = camera->GetForward();
 	//forward.z = 0.0f;
-	glm::vec3 position = camera->GetPosition();
+	Vector3f position = camera->GetPosition();
 	camera->SetPosition(position + forward * 0.2f);
 }
 
 void CameraTranslateForwardMinus()
 {
 	std::shared_ptr<Camera> camera = _Scene->GetCamera(CameraIndex::MainCamera);
-	glm::vec3 forward = camera->GetForward();
+	Vector3f forward = camera->GetForward();
 	//forward.z = 0.0f;
-	glm::vec3 position = camera->GetPosition();
+	Vector3f position = camera->GetPosition();
 	camera->SetPosition(position - forward * 0.2f);
 }
 
@@ -138,152 +138,152 @@ void InitSimpleObjects()
 	std::shared_ptr<Material> SimpleObjectShadowDepthMaterial = std::shared_ptr<Material>(new Material(std::vector<std::string>{ "ShadowDepthVertShader.vsh", "ShadowDepthFragShader.fsh" }));
 	std::shared_ptr<MaterialInstance> SimpleObjectShadowDepthMaterialInst = std::shared_ptr<MaterialInstance>(new MaterialInstance(SimpleObjectShadowDepthMaterial));
 	
-	float Scale = 1.5f;
+	Float32 Scale = 1.5f;
 	{
 		std::shared_ptr<Material> SimpleObjectMaterial00 = std::shared_ptr<Material>(new Material(std::vector<std::string> { "SimpleVertShader.vsh", "SimpleFragShader.fsh" }));
 		std::shared_ptr<MaterialInstance> SimpleObjectMaterialInst00 = std::shared_ptr<MaterialInstance>(new MaterialInstance(SimpleObjectMaterial00));
-		SimpleObjectMaterialInst00->SetUniform<glm::vec3>("ColorTest", glm::vec3(0.25, 0.0, 0.0));
+		SimpleObjectMaterialInst00->SetUniform<Vector3f>("ColorTest", Vector3f(0.25, 0.0, 0.0));
 		std::shared_ptr<SimpleObject> Cube00 = std::shared_ptr<SimpleObject>(new SimpleObject("BasicModel\\Cube.FBX", SimpleObjectShadowDepthMaterialInst, SimpleObjectMaterialInst00));
-		Cube00->ObjectTransform.SetPosition(glm::vec3(-7.5, -7.5, 0.0) * Scale);
+		Cube00->ObjectTransform.SetPosition(Vector3f(-7.5, -7.5, 0.0) * Scale);
 		_Scene->AddObj(ObjectType::StaticMesh, Cube00);
 
 		std::shared_ptr<Material> SimpleObjectMaterial01 = std::shared_ptr<Material>(new Material(std::vector<std::string> { "SimpleVertShader.vsh", "SimpleFragShader.fsh" }));
 		std::shared_ptr<MaterialInstance> SimpleObjectMaterialInst01 = std::shared_ptr<MaterialInstance>(new MaterialInstance(SimpleObjectMaterial01));
-		SimpleObjectMaterialInst01->SetUniform<glm::vec3>("ColorTest", glm::vec3(0.5, 0.0, 0.0));
+		SimpleObjectMaterialInst01->SetUniform<Vector3f>("ColorTest", Vector3f(0.5, 0.0, 0.0));
 		std::shared_ptr<SimpleObject> Cube01 = std::shared_ptr<SimpleObject>(new SimpleObject("BasicModel\\Cube.FBX", SimpleObjectShadowDepthMaterialInst, SimpleObjectMaterialInst01));
-		Cube01->ObjectTransform.SetPosition(glm::vec3(-2.5, -7.5, 0.0) * Scale);
+		Cube01->ObjectTransform.SetPosition(Vector3f(-2.5, -7.5, 0.0) * Scale);
 		_Scene->AddObj(ObjectType::StaticMesh, Cube01);
 
 		std::shared_ptr<Material> SimpleObjectMaterial02 = std::shared_ptr<Material>(new Material(std::vector<std::string> { "SimpleVertShader.vsh", "SimpleFragShader.fsh" }));
 		std::shared_ptr<MaterialInstance> SimpleObjectMaterialInst02 = std::shared_ptr<MaterialInstance>(new MaterialInstance(SimpleObjectMaterial02));
-		SimpleObjectMaterialInst02->SetUniform<glm::vec3>("ColorTest", glm::vec3(0.75, 0.0, 0.0));
+		SimpleObjectMaterialInst02->SetUniform<Vector3f>("ColorTest", Vector3f(0.75, 0.0, 0.0));
 		std::shared_ptr<SimpleObject> Cube02 = std::shared_ptr<SimpleObject>(new SimpleObject("BasicModel\\Cube.FBX", SimpleObjectShadowDepthMaterialInst, SimpleObjectMaterialInst02));
-		Cube02->ObjectTransform.SetPosition(glm::vec3(2.5, -7.5, 0.0) * Scale);
+		Cube02->ObjectTransform.SetPosition(Vector3f(2.5, -7.5, 0.0) * Scale);
 		_Scene->AddObj(ObjectType::StaticMesh, Cube02);
 
 		std::shared_ptr<Material> SimpleObjectMaterial03 = std::shared_ptr<Material>(new Material(std::vector<std::string> { "SimpleVertShader.vsh", "SimpleFragShader.fsh" }));
 		std::shared_ptr<MaterialInstance> SimpleObjectMaterialInst03 = std::shared_ptr<MaterialInstance>(new MaterialInstance(SimpleObjectMaterial03));
-		SimpleObjectMaterialInst03->SetUniform<glm::vec3>("ColorTest", glm::vec3(1.0, 0.0, 0.0));
+		SimpleObjectMaterialInst03->SetUniform<Vector3f>("ColorTest", Vector3f(1.0, 0.0, 0.0));
 		std::shared_ptr<SimpleObject> Cube03 = std::shared_ptr<SimpleObject>(new SimpleObject("BasicModel\\Cube.FBX", SimpleObjectShadowDepthMaterialInst, SimpleObjectMaterialInst03));
-		Cube03->ObjectTransform.SetPosition(glm::vec3(7.5, -7.5, 0.0) * Scale);
+		Cube03->ObjectTransform.SetPosition(Vector3f(7.5, -7.5, 0.0) * Scale);
 		_Scene->AddObj(ObjectType::StaticMesh, Cube03);
 	}
 
 	{
 		std::shared_ptr<Material> SimpleObjectMaterial10 = std::shared_ptr<Material>(new Material(std::vector<std::string> { "SimpleVertShader.vsh", "SimpleFragShader.fsh" }));
 		std::shared_ptr<MaterialInstance> SimpleObjectMaterialInst10 = std::shared_ptr<MaterialInstance>(new MaterialInstance(SimpleObjectMaterial10));
-		SimpleObjectMaterialInst10->SetUniform<glm::vec3>("ColorTest", glm::vec3(0.0, 0.25, 0.0));
+		SimpleObjectMaterialInst10->SetUniform<Vector3f>("ColorTest", Vector3f(0.0, 0.25, 0.0));
 		std::shared_ptr<SimpleObject> Cube10 = std::shared_ptr<SimpleObject>(new SimpleObject("BasicModel\\Cube.FBX", SimpleObjectShadowDepthMaterialInst, SimpleObjectMaterialInst10));
-		Cube10->ObjectTransform.SetPosition(glm::vec3(-7.5, -2.5, 0.0) * Scale);
+		Cube10->ObjectTransform.SetPosition(Vector3f(-7.5, -2.5, 0.0) * Scale);
 		_Scene->AddObj(ObjectType::StaticMesh, Cube10);
 
 		std::shared_ptr<Material> SimpleObjectMaterial11 = std::shared_ptr<Material>(new Material(std::vector<std::string> { "SimpleVertShader.vsh", "SimpleFragShader.fsh" }));
 		std::shared_ptr<MaterialInstance> SimpleObjectMaterialInst11 = std::shared_ptr<MaterialInstance>(new MaterialInstance(SimpleObjectMaterial11));
-		SimpleObjectMaterialInst11->SetUniform<glm::vec3>("ColorTest", glm::vec3(0.0, 0.50, 0.0));
+		SimpleObjectMaterialInst11->SetUniform<Vector3f>("ColorTest", Vector3f(0.0, 0.50, 0.0));
 		std::shared_ptr<SimpleObject> Cube11 = std::shared_ptr<SimpleObject>(new SimpleObject("BasicModel\\Cube.FBX", SimpleObjectShadowDepthMaterialInst, SimpleObjectMaterialInst11));
-		Cube11->ObjectTransform.SetPosition(glm::vec3(-2.5, -2.5, 0.0) * Scale);
+		Cube11->ObjectTransform.SetPosition(Vector3f(-2.5, -2.5, 0.0) * Scale);
 		_Scene->AddObj(ObjectType::StaticMesh, Cube11);
 
 		std::shared_ptr<Material> SimpleObjectMaterial12 = std::shared_ptr<Material>(new Material(std::vector<std::string> { "SimpleVertShader.vsh", "SimpleFragShader.fsh" }));
 		std::shared_ptr<MaterialInstance> SimpleObjectMaterialInst12 = std::shared_ptr<MaterialInstance>(new MaterialInstance(SimpleObjectMaterial12));
-		SimpleObjectMaterialInst12->SetUniform<glm::vec3>("ColorTest", glm::vec3(0.0, 0.75, 0.0));
+		SimpleObjectMaterialInst12->SetUniform<Vector3f>("ColorTest", Vector3f(0.0, 0.75, 0.0));
 		std::shared_ptr<SimpleObject> Cube12 = std::shared_ptr<SimpleObject>(new SimpleObject("BasicModel\\Cube.FBX", SimpleObjectShadowDepthMaterialInst, SimpleObjectMaterialInst12));
-		Cube12->ObjectTransform.SetPosition(glm::vec3(2.5, -2.5, 0.0) * Scale);
+		Cube12->ObjectTransform.SetPosition(Vector3f(2.5, -2.5, 0.0) * Scale);
 		_Scene->AddObj(ObjectType::StaticMesh, Cube12);
 
 		std::shared_ptr<Material> SimpleObjectMaterial13 = std::shared_ptr<Material>(new Material(std::vector<std::string> { "SimpleVertShader.vsh", "SimpleFragShader.fsh" }));
 		std::shared_ptr<MaterialInstance> SimpleObjectMaterialInst13 = std::shared_ptr<MaterialInstance>(new MaterialInstance(SimpleObjectMaterial13));
-		SimpleObjectMaterialInst13->SetUniform<glm::vec3>("ColorTest", glm::vec3(0.0, 1.0, 0.0));
+		SimpleObjectMaterialInst13->SetUniform<Vector3f>("ColorTest", Vector3f(0.0, 1.0, 0.0));
 		std::shared_ptr<SimpleObject> Cube13 = std::shared_ptr<SimpleObject>(new SimpleObject("BasicModel\\Cube.FBX", SimpleObjectShadowDepthMaterialInst, SimpleObjectMaterialInst13));
-		Cube13->ObjectTransform.SetPosition(glm::vec3(7.5, -2.5, 0.0) * Scale);
+		Cube13->ObjectTransform.SetPosition(Vector3f(7.5, -2.5, 0.0) * Scale);
 		_Scene->AddObj(ObjectType::StaticMesh, Cube13);
 	}
 
 	{
 		std::shared_ptr<Material> SimpleObjectMaterial20 = std::shared_ptr<Material>(new Material(std::vector<std::string> { "SimpleVertShader.vsh", "SimpleFragShader.fsh" }));
 		std::shared_ptr<MaterialInstance> SimpleObjectMaterialInst20 = std::shared_ptr<MaterialInstance>(new MaterialInstance(SimpleObjectMaterial20));
-		SimpleObjectMaterialInst20->SetUniform<glm::vec3>("ColorTest", glm::vec3(0.0, 0.0, 0.25));
+		SimpleObjectMaterialInst20->SetUniform<Vector3f>("ColorTest", Vector3f(0.0, 0.0, 0.25));
 		std::shared_ptr<SimpleObject> Cube20 = std::shared_ptr<SimpleObject>(new SimpleObject("BasicModel\\Cube.FBX", SimpleObjectShadowDepthMaterialInst, SimpleObjectMaterialInst20));
-		Cube20->ObjectTransform.SetPosition(glm::vec3(-7.5, 2.5, 0.0) * Scale);
+		Cube20->ObjectTransform.SetPosition(Vector3f(-7.5, 2.5, 0.0) * Scale);
 		_Scene->AddObj(ObjectType::StaticMesh, Cube20);
 
 		std::shared_ptr<Material> SimpleObjectMaterial21 = std::shared_ptr<Material>(new Material(std::vector<std::string> { "SimpleVertShader.vsh", "SimpleFragShader.fsh" }));
 		std::shared_ptr<MaterialInstance> SimpleObjectMaterialInst21 = std::shared_ptr<MaterialInstance>(new MaterialInstance(SimpleObjectMaterial21));
-		SimpleObjectMaterialInst21->SetUniform<glm::vec3>("ColorTest", glm::vec3(0.0, 0.0, 0.50));
+		SimpleObjectMaterialInst21->SetUniform<Vector3f>("ColorTest", Vector3f(0.0, 0.0, 0.50));
 		std::shared_ptr<SimpleObject> Cube21 = std::shared_ptr<SimpleObject>(new SimpleObject("BasicModel\\Cube.FBX", SimpleObjectShadowDepthMaterialInst, SimpleObjectMaterialInst21));
-		Cube21->ObjectTransform.SetPosition(glm::vec3(-2.5, 2.5, 0.0) * Scale);
+		Cube21->ObjectTransform.SetPosition(Vector3f(-2.5, 2.5, 0.0) * Scale);
 		_Scene->AddObj(ObjectType::StaticMesh, Cube21);
 
 		std::shared_ptr<Material> SimpleObjectMaterial22 = std::shared_ptr<Material>(new Material(std::vector<std::string> { "SimpleVertShader.vsh", "SimpleFragShader.fsh" }));
 		std::shared_ptr<MaterialInstance> SimpleObjectMaterialInst22 = std::shared_ptr<MaterialInstance>(new MaterialInstance(SimpleObjectMaterial22));
-		SimpleObjectMaterialInst22->SetUniform<glm::vec3>("ColorTest", glm::vec3(0.0, 0.0, 0.75));
+		SimpleObjectMaterialInst22->SetUniform<Vector3f>("ColorTest", Vector3f(0.0, 0.0, 0.75));
 		std::shared_ptr<SimpleObject> Cube22 = std::shared_ptr<SimpleObject>(new SimpleObject("BasicModel\\Cube.FBX", SimpleObjectShadowDepthMaterialInst, SimpleObjectMaterialInst22));
-		Cube22->ObjectTransform.SetPosition(glm::vec3(2.5, 2.5, 0.0) * Scale);
+		Cube22->ObjectTransform.SetPosition(Vector3f(2.5, 2.5, 0.0) * Scale);
 		_Scene->AddObj(ObjectType::StaticMesh, Cube22);
 
 		std::shared_ptr<Material> SimpleObjectMaterial23 = std::shared_ptr<Material>(new Material(std::vector<std::string> { "SimpleVertShader.vsh", "SimpleFragShader.fsh" }));
 		std::shared_ptr<MaterialInstance> SimpleObjectMaterialInst23 = std::shared_ptr<MaterialInstance>(new MaterialInstance(SimpleObjectMaterial23));
-		SimpleObjectMaterialInst23->SetUniform<glm::vec3>("ColorTest", glm::vec3(0.0, 0.0, 1.0));
+		SimpleObjectMaterialInst23->SetUniform<Vector3f>("ColorTest", Vector3f(0.0, 0.0, 1.0));
 		std::shared_ptr<SimpleObject> Cube23 = std::shared_ptr<SimpleObject>(new SimpleObject("BasicModel\\Cube.FBX", SimpleObjectShadowDepthMaterialInst, SimpleObjectMaterialInst23));
-		Cube23->ObjectTransform.SetPosition(glm::vec3(7.5, 2.5, 0.0) * Scale);
+		Cube23->ObjectTransform.SetPosition(Vector3f(7.5, 2.5, 0.0) * Scale);
 		_Scene->AddObj(ObjectType::StaticMesh, Cube23);
 	}
 
 	{
 		std::shared_ptr<Material> SimpleObjectMaterial30 = std::shared_ptr<Material>(new Material(std::vector<std::string> { "SimpleVertShader.vsh", "SimpleFragShader.fsh" }));
 		std::shared_ptr<MaterialInstance> SimpleObjectMaterialInst30 = std::shared_ptr<MaterialInstance>(new MaterialInstance(SimpleObjectMaterial30));
-		SimpleObjectMaterialInst30->SetUniform<glm::vec3>("ColorTest", glm::vec3(0.25, 0.25, 0.0));
+		SimpleObjectMaterialInst30->SetUniform<Vector3f>("ColorTest", Vector3f(0.25, 0.25, 0.0));
 		std::shared_ptr<SimpleObject> Cube30 = std::shared_ptr<SimpleObject>(new SimpleObject("BasicModel\\Cube.FBX", SimpleObjectShadowDepthMaterialInst, SimpleObjectMaterialInst30));
-		Cube30->ObjectTransform.SetPosition(glm::vec3(-7.5, 7.5, 0.0) * Scale);
+		Cube30->ObjectTransform.SetPosition(Vector3f(-7.5, 7.5, 0.0) * Scale);
 		_Scene->AddObj(ObjectType::StaticMesh, Cube30);
 
 		std::shared_ptr<Material> SimpleObjectMaterial31 = std::shared_ptr<Material>(new Material(std::vector<std::string> { "SimpleVertShader.vsh", "SimpleFragShader.fsh" }));
 		std::shared_ptr<MaterialInstance> SimpleObjectMaterialInst31 = std::shared_ptr<MaterialInstance>(new MaterialInstance(SimpleObjectMaterial31));
-		SimpleObjectMaterialInst31->SetUniform<glm::vec3>("ColorTest", glm::vec3(0.50, 0.50, 0.0));
+		SimpleObjectMaterialInst31->SetUniform<Vector3f>("ColorTest", Vector3f(0.50, 0.50, 0.0));
 		std::shared_ptr<SimpleObject> Cube31 = std::shared_ptr<SimpleObject>(new SimpleObject("BasicModel\\Cube.FBX", SimpleObjectShadowDepthMaterialInst, SimpleObjectMaterialInst31));
-		Cube31->ObjectTransform.SetPosition(glm::vec3(-2.5, 7.5, 0.0) * Scale);
+		Cube31->ObjectTransform.SetPosition(Vector3f(-2.5, 7.5, 0.0) * Scale);
 		_Scene->AddObj(ObjectType::StaticMesh, Cube31);
 
 		std::shared_ptr<Material> SimpleObjectMaterial32 = std::shared_ptr<Material>(new Material(std::vector<std::string> { "SimpleVertShader.vsh", "SimpleFragShader.fsh" }));
 		std::shared_ptr<MaterialInstance> SimpleObjectMaterialInst32 = std::shared_ptr<MaterialInstance>(new MaterialInstance(SimpleObjectMaterial32));
-		SimpleObjectMaterialInst32->SetUniform<glm::vec3>("ColorTest", glm::vec3(0.75, 0.75, 0.0));
+		SimpleObjectMaterialInst32->SetUniform<Vector3f>("ColorTest", Vector3f(0.75, 0.75, 0.0));
 		std::shared_ptr<SimpleObject> Cube32 = std::shared_ptr<SimpleObject>(new SimpleObject("BasicModel\\Cube.FBX", SimpleObjectShadowDepthMaterialInst, SimpleObjectMaterialInst32));
-		Cube32->ObjectTransform.SetPosition(glm::vec3(2.5, 7.5, 0.0) * Scale);
+		Cube32->ObjectTransform.SetPosition(Vector3f(2.5, 7.5, 0.0) * Scale);
 		_Scene->AddObj(ObjectType::StaticMesh, Cube32);
 
 		std::shared_ptr<Material> SimpleObjectMaterial33 = std::shared_ptr<Material>(new Material(std::vector<std::string> { "SimpleVertShader.vsh", "SimpleFragShader.fsh" }));
 		std::shared_ptr<MaterialInstance> SimpleObjectMaterialInst33 = std::shared_ptr<MaterialInstance>(new MaterialInstance(SimpleObjectMaterial33));
-		SimpleObjectMaterialInst33->SetUniform<glm::vec3>("ColorTest", glm::vec3(1.0, 1.0, 0.0));
+		SimpleObjectMaterialInst33->SetUniform<Vector3f>("ColorTest", Vector3f(1.0, 1.0, 0.0));
 		std::shared_ptr<SimpleObject> Cube33 = std::shared_ptr<SimpleObject>(new SimpleObject("BasicModel\\Cube.FBX", SimpleObjectShadowDepthMaterialInst, SimpleObjectMaterialInst33));
-		Cube33->ObjectTransform.SetPosition(glm::vec3(7.5, 7.5, 0.0) * Scale);
+		Cube33->ObjectTransform.SetPosition(Vector3f(7.5, 7.5, 0.0) * Scale);
 		_Scene->AddObj(ObjectType::StaticMesh, Cube33);
 	}
 	{
 		std::shared_ptr<Material> SimpleObjectMaterial0 = std::shared_ptr<Material>(new Material(std::vector<std::string> { "SimpleVertShader.vsh", "SimpleFragShader.fsh" }));
 		std::shared_ptr<MaterialInstance> SimpleObjectMaterialInst7 = std::shared_ptr<MaterialInstance>(new MaterialInstance(SimpleObjectMaterial0));
-		SimpleObjectMaterialInst7->SetUniform<glm::vec3>("ColorTest", glm::vec3(1.0, 0.0, 1.0));
+		SimpleObjectMaterialInst7->SetUniform<Vector3f>("ColorTest", Vector3f(1.0, 0.0, 1.0));
 		std::shared_ptr<SimpleObject> Plane = std::shared_ptr<SimpleObject>(new SimpleObject("BasicModel\\Plane.FBX", SimpleObjectShadowDepthMaterialInst, SimpleObjectMaterialInst7));
-		Plane->ObjectTransform.SetPosition(glm::vec3(0.0, 0.0, -1.0));
-		Plane->ObjectTransform.SetScale(glm::vec3(50.0, 50.0, 50.0));
+		Plane->ObjectTransform.SetPosition(Vector3f(0.0, 0.0, -1.0));
+		Plane->ObjectTransform.SetScale(Vector3f(50.0, 50.0, 50.0));
 		_Scene->AddObj(ObjectType::StaticMesh, Plane);
 	}
 	
 	std::shared_ptr<Material> SimpleObjectMaterial = std::shared_ptr<Material>(new Material(std::vector<std::string> { "SimpleVertShader.vsh", "SimpleFragShader.fsh" }));
 	 SimpleObjectMaterialInst = std::shared_ptr<MaterialInstance>(new MaterialInstance(SimpleObjectMaterial));
-	SimpleObjectMaterialInst->SetUniform<glm::vec3>("ColorTest", glm::vec3(1.0, 1.0, 1.0));
+	SimpleObjectMaterialInst->SetUniform<Vector3f>("ColorTest", Vector3f(1.0, 1.0, 1.0));
 	std::shared_ptr<SimpleObject> Sphere = std::shared_ptr<SimpleObject>(new SimpleObject("BasicModel\\Sphere.FBX", SimpleObjectShadowDepthMaterialInst, SimpleObjectMaterialInst));
-	Sphere->ObjectTransform.SetPosition(glm::vec3(0.0, 0.0, 10.0));
-	Sphere->ObjectTransform.SetScale(glm::vec3(1.0, 1.0, 1.0));
+	Sphere->ObjectTransform.SetPosition(Vector3f(0.0, 0.0, 10.0));
+	Sphere->ObjectTransform.SetScale(Vector3f(1.0, 1.0, 1.0));
 	_Scene->AddObj(ObjectType::DynamicMesh, Sphere);
 
-	ReflectionActor = std::shared_ptr<SphereReflectionCapture>(new SphereReflectionCapture(glm::vec3(0.0, 0.0, 5.0), 1000.0, 1.0));
+	ReflectionActor = std::shared_ptr<SphereReflectionCapture>(new SphereReflectionCapture(Vector3f(0.0, 0.0, 5.0), 1000.0, 1.0));
 	_Scene->AddObj(ObjectType::AbstractActor, ReflectionActor);
 }
 
 void CaptureReflection()
 {
 	std::vector<std::shared_ptr<Object>> AbstractActors = _Scene->GetObjects(ObjectType::AbstractActor);
-	for (int Index = 0; Index < AbstractActors.size(); Index++)
+	for (Int32 Index = 0; Index < AbstractActors.size(); Index++)
 	{
 		SphereReflectionCapture * Capture = dynamic_cast<SphereReflectionCapture*>(AbstractActors[Index].get());
 		if (Capture != nullptr)
@@ -305,8 +305,8 @@ void InitView()
 	_Scene = std::shared_ptr<SceneManager>(new SceneManager());
 	_GPUBuffers = std::shared_ptr<BufferManager>(new BufferManager());
 	_Scene->SetCurrentEditMode(ModeState::EditMode::CameraTranslation);
-	std::shared_ptr<Camera> ViewCamera = std::shared_ptr<Camera>(new Camera(glm::vec3(0.0, 30.0, 10.0), glm::vec3(0.0, 0.0, -90.0), (float)glm::radians(60.0), (float)_ScreenWidth / (float)_ScreenHeight, 0.1f, 100.0f, glm::ivec2(_ScreenWidth, _ScreenHeight)));
-	//std::shared_ptr<Camera> ViewCamera = std::shared_ptr<Camera>(new Camera(glm::vec3(0, 0.0, 50.0), glm::vec3(0.0, -90.0, 0.0), (float)glm::radians(60.0), (float)_ScreenWidth / (float)_ScreenHeight, 0.10f, 100.0f, glm::ivec2(_ScreenWidth, _ScreenHeight)));
+	std::shared_ptr<Camera> ViewCamera = std::shared_ptr<Camera>(new Camera(Vector3f(0.0, 30.0, 10.0), Vector3f(0.0, 0.0, -90.0), Math::Radians(60.0), (Float32)_ScreenWidth / (Float32)_ScreenHeight, 0.1f, 100.0f, Vector2i(_ScreenWidth, _ScreenHeight)));
+	//std::shared_ptr<Camera> ViewCamera = std::shared_ptr<Camera>(new Camera(Vector3f(0, 0.0, 50.0), Vector3f(0.0, -90.0, 0.0), Math::Radians(60.0), (Float32)_ScreenWidth / (Float32)_ScreenHeight, 0.10f, 100.0f, Vector2i(_ScreenWidth, _ScreenHeight)));
 
 	_Scene->AddCamera(CameraIndex::MainCamera, ViewCamera);
 
@@ -315,30 +315,28 @@ void InitView()
 	DeferPipeline = std::shared_ptr<DeferRenderPipeline>(new DeferRenderPipeline());
 	DeferPipeline->Init();
 
-	glm::vec3 a = glm::normalize(glm::vec3(-297.25842f, -2569.22778f, -1520.10132f));
-
 	InitSimpleObjects();
 
 	CaptureReflection();
 	SimpleObjectMaterialInst->SetTextureID("ReflectionTex", ReflectionActor->GetReflectionTextureID());
 	SimpleObjectMaterialInst->SetTextureID("PreIntegratedGF", GlobalTextures->GetPreIntegratedGF_Tex());
-	SimpleObjectMaterialInst->SetUniform<float>("AverageBrightness", ReflectionActor->GetAverageBrightness());
-	SimpleObjectMaterialInst->SetUniform<float>("Brightness", ReflectionActor->GetBrightness());
-	SimpleObjectMaterialInst->SetUniform<glm::vec4>("CapturePositionAndInfluenceRadius", glm::vec4(ReflectionActor->ObjectTransform.GetPosition(), ReflectionActor->GetInfluenceRaidus()));
-	SimpleObjectMaterialInst->SetUniform<int>("bReflect", 1);
+	SimpleObjectMaterialInst->SetUniform<Float32>("AverageBrightness", ReflectionActor->GetAverageBrightness());
+	SimpleObjectMaterialInst->SetUniform<Float32>("Brightness", ReflectionActor->GetBrightness());
+	SimpleObjectMaterialInst->SetUniform<Vector4f>("CapturePositionAndInfluenceRadius", Vector4f(ReflectionActor->ObjectTransform.GetPosition(), ReflectionActor->GetInfluenceRaidus()));
+	SimpleObjectMaterialInst->SetUniform<Int32>("bReflect", 1);
 
 	_Scene->GetCamera(CameraIndex::MainCamera)->ActiveViewPort();
 }
 
 
-float angle = 0.0f;
-float R = 15.0f;
+Float32 angle = 0.0f;
+Float32 R = 15.0f;
 
 void Render()
 {
-	glm::vec3 Position = glm::vec3(R * cos(angle), R * sin(angle), 10.0);
+	Vector3f Position = Vector3f(R * cos(angle), R * sin(angle), 10.0);
 	//_Scene->GetCamera(MainCamera)->SetPosition(Position);
-	//_Scene->GetCamera(MainCamera)->SetDirection(glm::vec3(0.0, 0.0, 10.0) - Position, glm::vec3(0.0, 0.0, 1.0));
+	//_Scene->GetCamera(MainCamera)->SetDirection(Vector3f(0.0, 0.0, 10.0) - Position, Vector3f(0.0, 0.0, 1.0));
 	//CaptureReflection();
 	angle += 0.01f;
 	if(angle >= 3.141592654f * 2.0f)
@@ -373,13 +371,13 @@ void Render()
 	
 }
 
-int main()
+Int32 main()
 {
-	bool b = glewInit();
+	Bool b = glewInit();
 	GLFWwindow* Window = InitWindow();
 	InitApplication();
 	InitView();
-	bool a = glewInit();
+	Bool a = glewInit();
 	// uncomment this call to draw in wireframe polygons.
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
@@ -400,7 +398,7 @@ int main()
 	 // -------------------------------------------------------------------------------
 		if (bPause)
 		{
-			int a = 0;
+			Int32 a = 0;
 		}
 		glfwSwapBuffers(Window);
 		glfwPollEvents();
@@ -506,7 +504,7 @@ void processInput(GLFWwindow *window)
 
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes
 // ---------------------------------------------------------------------------------------------
-void framebuffer_size_callback(GLFWwindow* window, int width, int height)
+void framebuffer_size_callback(GLFWwindow* window, Int32 width, Int32 height)
 {
 	// make sure the viewport matches the new window dimensions; note that width and 
 	// height will be significantly larger than specified on retina displays.

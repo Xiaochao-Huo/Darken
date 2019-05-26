@@ -31,12 +31,12 @@ enum TextureDataTypeFormat
 	TF_G16R16,
 	TF_A16B16G16R16,
 
-	// 16-bit floating-point formats ('half float' channels).
+	// 16-bit floating-point formats ('half Float32' channels).
 	TF_R16F,
 	TF_G16R16F,
 	TF_A16B16G16R16F,
 
-	// 32-bit floating-point formats ('float' channels).
+	// 32-bit floating-point formats ('Float32' channels).
 	TF_R32F,
 	TF_G32R32F,
 	TF_B32G32R32F,
@@ -66,9 +66,9 @@ enum TextureDataTypeFormat
 
 struct RawTextureData
 {
-	int Width;
-	int Height;
-	unsigned char* MipData;
+	Int32 Width;
+	Int32 Height;
+	UInt8* MipData;
 	RawTextureData() {};
 };
 
@@ -104,15 +104,15 @@ public:
 	// @param TableSize1D 2 for 2x2, 4 for 4x4, 6 for 6x6, 8 for 8x8
 	// @param SharpenFactor can be negative to blur
 	// generate normalized 2D Kernel with sharpening
-	void BuildSeparatableGaussWithSharpen(int TableSize1D, float SharpenFactor = 0.0f)
+	void BuildSeparatableGaussWithSharpen(Int32 TableSize1D, Float32 SharpenFactor = 0.0f)
 	{
 		if (TableSize1D > MaxKernelExtend)
 		{
 			TableSize1D = MaxKernelExtend;
 		}
 
-		float Table1D[MaxKernelExtend];
-		float NegativeTable1D[MaxKernelExtend];
+		Float32 Table1D[MaxKernelExtend];
+		Float32 NegativeTable1D[MaxKernelExtend];
 
 		FilterTableSize = TableSize1D;
 
@@ -166,19 +166,19 @@ public:
 		BuildFilterTable2DFrom1D(KernelWeights, Table1D, TableSize1D);
 	}
 
-	inline int GetFilterTableSize() const
+	inline Int32 GetFilterTableSize() const
 	{
 		return FilterTableSize;
 	}
 
-	inline float GetAt(int X, int Y) const
+	inline Float32 GetAt(Int32 X, Int32 Y) const
 	{
 		//checkSlow(X < FilterTableSize);
 		//checkSlow(Y < FilterTableSize);
 		return KernelWeights[X + Y * FilterTableSize];
 	}
 
-	inline float& GetRefAt(int X, int Y)
+	inline Float32& GetRefAt(Int32 X, Int32 Y)
 	{
 		//checkSlow(X < FilterTableSize);
 		//checkSlow(Y < FilterTableSize);
@@ -187,41 +187,41 @@ public:
 
 private:
 
-	inline static float NormalDistribution(float X, float Variance)
+	inline static Float32 NormalDistribution(Float32 X, Float32 Variance)
 	{
-		const float StandardDeviation = sqrtf(Variance);
-		return expf(-(X*X) / (2.0f * Variance)) / (StandardDeviation * sqrtf(2.0f * (float)PI));
+		const Float32 StandardDeviation = sqrtf(Variance);
+		return expf(-(X*X) / (2.0f * Variance)) / (StandardDeviation * sqrtf(2.0f * (Float32)PI));
 	}
 
 	// support even and non even sized filters
-	static void BuildGaussian1D(float *InOutTable, int TableSize, float Sum, float Variance)
+	static void BuildGaussian1D(Float32 *InOutTable, Int32 TableSize, Float32 Sum, Float32 Variance)
 	{
-		float Center = TableSize * 0.5f;
-		float CurrentSum = 0;
-		for (int i = 0; i < TableSize; ++i)
+		Float32 Center = TableSize * 0.5f;
+		Float32 CurrentSum = 0;
+		for (Int32 i = 0; i < TableSize; ++i)
 		{
-			float Actual = NormalDistribution(i - Center + 0.5f, Variance);
+			Float32 Actual = NormalDistribution(i - Center + 0.5f, Variance);
 			InOutTable[i] = Actual;
 			CurrentSum += Actual;
 		}
 		// Normalize
-		float InvSum = Sum / CurrentSum;
-		for (int i = 0; i < TableSize; ++i)
+		Float32 InvSum = Sum / CurrentSum;
+		for (Int32 i = 0; i < TableSize; ++i)
 		{
 			InOutTable[i] *= InvSum;
 		}
 	}
 
 	//
-	static void BuildFilterTable1DBase(float *InOutTable, int TableSize, float Sum)
+	static void BuildFilterTable1DBase(Float32 *InOutTable, Int32 TableSize, Float32 Sum)
 	{
 		// we require a even sized filter
 		//check(TableSize % 2 == 0);
 
-		float Inner = 0.5f * Sum;
+		Float32 Inner = 0.5f * Sum;
 
-		int Center = TableSize / 2;
-		for (int x = 0; x < TableSize; ++x)
+		Int32 Center = TableSize / 2;
+		for (Int32 x = 0; x < TableSize; ++x)
 		{
 			if (x == Center || x == Center - 1)
 			{
@@ -237,33 +237,33 @@ private:
 	}
 
 	// InOutTable += InTable
-	static void AddFilterTable1D(float *InOutTable, float *InTable, int TableSize)
+	static void AddFilterTable1D(Float32 *InOutTable, Float32 *InTable, Int32 TableSize)
 	{
-		for (int x = 0; x < TableSize; ++x)
+		for (Int32 x = 0; x < TableSize; ++x)
 		{
 			InOutTable[x] += InTable[x];
 		}
 	}
 
 	// @param Times 1:box, 2:triangle, 3:pow2, 4:pow3, ...
-	// can be optimized with double buffering but doesn't need to be fast
-	static void BlurFilterTable1D(float *InOutTable, int TableSize, int Times)
+	// can be optimized with Float64 buffering but doesn't need to be fast
+	static void BlurFilterTable1D(Float32 *InOutTable, Int32 TableSize, Int32 Times)
 	{
 		//check(Times > 0);
 		//check(TableSize < 32);
 
-		float Intermediate[32];
+		Float32 Intermediate[32];
 
-		for (int Pass = 0; Pass < Times; ++Pass)
+		for (Int32 Pass = 0; Pass < Times; ++Pass)
 		{
-			for (int x = 0; x < TableSize; ++x)
+			for (Int32 x = 0; x < TableSize; ++x)
 			{
 				Intermediate[x] = InOutTable[x];
 			}
 
-			for (int x = 0; x < TableSize; ++x)
+			for (Int32 x = 0; x < TableSize; ++x)
 			{
-				float sum = Intermediate[x];
+				Float32 sum = Intermediate[x];
 
 				if (x)
 				{
@@ -279,11 +279,11 @@ private:
 		}
 	}
 
-	static void BuildFilterTable2DFrom1D(float *OutTable2D, float *InTable1D, int TableSize)
+	static void BuildFilterTable2DFrom1D(Float32 *OutTable2D, Float32 *InTable1D, Int32 TableSize)
 	{
-		for (int y = 0; y < TableSize; ++y)
+		for (Int32 y = 0; y < TableSize; ++y)
 		{
-			for (int x = 0; x < TableSize; ++x)
+			for (Int32 x = 0; x < TableSize; ++x)
 			{
 				OutTable2D[x + y * TableSize] = InTable1D[y] * InTable1D[x];
 			}
@@ -291,37 +291,37 @@ private:
 	}
 
 	// at max we support MaxKernelExtend x MaxKernelExtend kernels
-	const static int MaxKernelExtend = 12;
+	const static Int32 MaxKernelExtend = 12;
 	// 0 if no kernel was setup yet
-	int FilterTableSize;
+	Int32 FilterTableSize;
 	// normalized, means the sum of it should be 1.0f
-	float KernelWeights[MaxKernelExtend * MaxKernelExtend];
+	Float32 KernelWeights[MaxKernelExtend * MaxKernelExtend];
 };
 class Texture
 {
 public:
-	unsigned int GPUId;
-	unsigned int GPUSamplerId;
+	UInt32 GPUId;
+	UInt32 GPUSamplerId;
 
 	Texture();
 	~Texture();
 	Texture(std::string file, TextureParameter minParm, TextureParameter magParm, TextureParameter wrapParmU, TextureParameter wrapParmV);
-	//unsigned int CreateCompositeTexture(float compositepower, bool useGPU = true, Channel AddToChanel = GREEN, std::string compositeTexFilePath = " ");
+	//UInt32 CreateCompositeTexture(Float32 compositepower, Bool useGPU = true, Channel AddToChanel = GREEN, std::string compositeTexFilePath = " ");
 	void CreateGPUObject(TextureParameter minParm, TextureParameter magParm, TextureParameter wrapParmU, TextureParameter wrapParmV);
 	void UpdateGPUObjectData();
 
 	void LoadTextureFromAsset(std::string const& file);
-	//void InitMipRawTextureData(int width, int height, TextureDataTypeFormat typeFormat);
-	//void InitNoMipRawTextureData(int width, int height, TextureDataTypeFormat typeFormat);
+	//void InitMipRawTextureData(Int32 width, Int32 height, TextureDataTypeFormat typeFormat);
+	//void InitNoMipRawTextureData(Int32 width, Int32 height, TextureDataTypeFormat typeFormat);
 
-	int GetNumMip();
-	int GetWidth();
-	int GetHeight();
-	std::shared_ptr<RawTextureData> GetRawDataPtr(int Mip);
+	Int32 GetNumMip();
+	Int32 GetWidth();
+	Int32 GetHeight();
+	std::shared_ptr<RawTextureData> GetRawDataPtr(Int32 Mip);
 
 private:
-	int Width;
-	int Height;
+	Int32 Width;
+	Int32 Height;
 	FREE_IMAGE_FORMAT GetFileType(std::string const& file);
 	TextureDataTypeFormat GetTextureType(FIBITMAP *dib);
 	TextureDataTypeFormat TypeFormat;

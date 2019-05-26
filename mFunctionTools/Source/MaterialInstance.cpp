@@ -8,12 +8,12 @@ MaterialInstance::MaterialInstance(std::shared_ptr<Material> parentMaterial)
 
 MaterialInstance::~MaterialInstance()
 {
-	for (std::map<int, void*>::iterator it = BasicUniformID_PtrMap.begin(); it != BasicUniformID_PtrMap.end(); it++)
+	for (std::map<Int32, void*>::iterator it = BasicUniformID_PtrMap.begin(); it != BasicUniformID_PtrMap.end(); it++)
 	{
 		free(it->second);
 	}
 
-	for (std::map<int, unsigned int*>::iterator it = TextureUniformID_PtrMap.begin(); it != TextureUniformID_PtrMap.end(); it++)
+	for (std::map<Int32, UInt32*>::iterator it = TextureUniformID_PtrMap.begin(); it != TextureUniformID_PtrMap.end(); it++)
 	{
 		delete it->second;
 	}
@@ -33,46 +33,46 @@ void MaterialInstance::SetParent(std::shared_ptr<Material> parentMaterial)
 	{
 		BlockData = malloc(ItBlock->second->DataSize_Byte);
 		ItBlock->second->DataPtr = BlockData;
-		int BlockID = hs(ItBlock->first);
-		std::map<int, void*> UniformID_PtrMap;
-		for(std::map<long long, UniformItem_WithinBlock>::iterator ItUniform = ItBlock->second->Uniforms.begin(); ItUniform != ItBlock->second->Uniforms.end(); ItUniform++)
+		Int32 BlockID = (Int32) hs(ItBlock->first);
+		std::map<Int32, void*> UniformID_PtrMap;
+		for(std::map<UInt32, UniformItem_WithinBlock>::iterator ItUniform = ItBlock->second->Uniforms.begin(); ItUniform != ItBlock->second->Uniforms.end(); ItUniform++)
 		{
-			int UniformID = hs(ItUniform->second.Name);
-			void* UniformPtr = (void*) ((long long)BlockData + ItUniform->second.Offset_Byte);
-			UniformID_PtrMap.insert(std::pair<int, void*>(UniformID, UniformPtr));
+			Int32 UniformID = (Int32) hs(ItUniform->second.Name);
+			void* UniformPtr = (void*) ((Address)BlockData + ItUniform->second.Offset_Byte);
+			UniformID_PtrMap.insert(std::pair<Int32, void*>(UniformID, UniformPtr));
 		}
-		BlockID_UniformID_DataPtrMap.insert(std::pair<int, std::map<int, void*>>(BlockID, UniformID_PtrMap));
+		BlockID_UniformID_DataPtrMap.insert(std::pair<Int32, std::map<Int32, void*>>(BlockID, UniformID_PtrMap));
 	}
 
 	void * Data;
 	for (std::unordered_map<std::string, UniformItem_Basic>::iterator it = ParentMaterial->MaterialProgram->Uniforms_Basic.begin(); it != ParentMaterial->MaterialProgram->Uniforms_Basic.end(); it++)
 	{
-		int ID = hs(it->first);
+		Int32 ID = (Int32) hs(it->first);
 		switch (it->second.DataType)
 		{
-		case GLSL_INT: Data = malloc(sizeof(int) * it->second.Size); break;
-		case GLSL_FLOAT: Data = malloc(sizeof(float) * it->second.Size); break;
-		case GLSL_VEC2: Data = malloc(sizeof(glm::vec2) * it->second.Size);	break;
-		case GLSL_VEC3:	Data = malloc(sizeof(glm::vec3) * it->second.Size);	break;
-		case GLSL_VEC4:	Data = malloc(sizeof(glm::vec4) * it->second.Size);	break;
-		case GLSL_IVEC2: Data = malloc(sizeof(glm::ivec2) * it->second.Size); break;
-		case GLSL_IVEC3: Data = malloc(sizeof(glm::ivec3) * it->second.Size); break;
-		case GLSL_IVEC4: Data = malloc(sizeof(glm::ivec4) * it->second.Size); break;
-		case GLSL_MAT3:	Data = malloc(sizeof(glm::mat3) * it->second.Size);	break;
-		case GLSL_MAT4: Data = malloc(sizeof(glm::mat4) * it->second.Size); break;
+		case GLSL_INT: Data = malloc(sizeof(Int32) * it->second.Size); break;
+		case GLSL_FLOAT: Data = malloc(sizeof(Float32) * it->second.Size); break;
+		case GLSL_VEC2: Data = malloc(sizeof(Vector2f) * it->second.Size);	break;
+		case GLSL_VEC3:	Data = malloc(sizeof(Vector3f) * it->second.Size);	break;
+		case GLSL_VEC4:	Data = malloc(sizeof(Vector4f) * it->second.Size);	break;
+		case GLSL_IVEC2: Data = malloc(sizeof(Vector2i) * it->second.Size); break;
+		case GLSL_IVEC3: Data = malloc(sizeof(Vector3i) * it->second.Size); break;
+		case GLSL_IVEC4: Data = malloc(sizeof(Vector4i) * it->second.Size); break;
+		case GLSL_MAT3:	Data = malloc(sizeof(Mat3f) * it->second.Size);	break;
+		case GLSL_MAT4: Data = malloc(sizeof(Mat4f) * it->second.Size); break;
 		default:
 			Data = nullptr;
 			break;
 		}
 		it->second.DataPtr = (void*)Data;
-		BasicUniformID_PtrMap.insert(std::pair<int, void*>(ID, it->second.DataPtr));
+		BasicUniformID_PtrMap.insert(std::pair<Int32, void*>(ID, it->second.DataPtr));
 	}
 	for (std::unordered_map<std::string, UniformItem_Texture>::iterator it = ParentMaterial->MaterialProgram->Uniforms_Texture.begin(); it != ParentMaterial->MaterialProgram->Uniforms_Texture.end(); it++)
 	{
-		int ID = hs(it->first);
-		unsigned int * textureID = new unsigned int;
+		Int32 ID = (Int32)hs(it->first);
+		UInt32 * textureID = new UInt32;
 		it->second.IDPtr = textureID;
-		TextureUniformID_PtrMap.insert(std::pair<int, unsigned int *>(ID, it->second.IDPtr));
+		TextureUniformID_PtrMap.insert(std::pair<Int32, UInt32 *>(ID, it->second.IDPtr));
 	}
 }
 
@@ -107,13 +107,13 @@ std::shared_ptr<Material> MaterialInstance::GetParent()
 	return ParentMaterial;
 }
 
-int MaterialInstance::GetID(const std::string& ParameterName)
+Int32 MaterialInstance::GetID(const std::string& ParameterName)
 {
 	std::hash<std::string> hs;
-	return hs(ParameterName);
+	return (Int32) hs(ParameterName);
 }
 
-void MaterialInstance::MarkDirty(int BlockID)
+void MaterialInstance::MarkDirty(Int32 BlockID)
 {
 	_GPUBuffers->MarkBufferDirty(BlockID);
 }

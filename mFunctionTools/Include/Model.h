@@ -11,25 +11,25 @@
 
 struct ModelNode
 {
-	glm::mat4 ModelMatrix;
-	int NumFaces;
-	unsigned int VBO;
-	unsigned int IBO;
-	unsigned int VAO;
+	Mat4f ModelMatrix;
+	Int32 NumFaces;
+	UInt32 VBO;
+	UInt32 IBO;
+	UInt32 VAO;
 	IndexSizeType IBOIndexSizeType;
 	SphereBox SurroundSphereBox;
 	RectBox SurroundRectBox;
 	//Animation AnimationSys;
-	bool bNeedClip;
+	Bool bNeedClip;
 	ModelNode(){};
 };
 
 struct ModelMesh
 {
-	int NumFaces;
-	unsigned int VAO;
-	unsigned int VBO;
-	unsigned int IBO;
+	Int32 NumFaces;
+	UInt32 VAO;
+	UInt32 VBO;
+	UInt32 IBO;
 	IndexSizeType IBOIndexSizeType;
 	SphereBox SurroundSphereBox;
 	RectBox SurroundRectBox;
@@ -41,14 +41,14 @@ class Model : public Object
 {
 public:
 	Model();
-	Model(std::string fileName, glm::vec3 scale = glm::vec3(1.0, 1.0, 1.0), bool bPackToOneMesh = false);
+	Model(std::string fileName, Vector3f scale = Vector3f(1.0, 1.0, 1.0), Bool bPackToOneMesh = false);
 	~Model();
 
-	void LoadModelFromAsset(std::string fileName, glm::vec3 scale = glm::vec3(1.0, 1.0, 1.0), bool bPackToOneMesh = false);
+	void LoadModelFromAsset(std::string fileName, Vector3f scale = Vector3f(1.0, 1.0, 1.0), Bool bPackToOneMesh = false);
 	void BindMaterial(std::shared_ptr<MaterialInstance> shadowDepthMaterial, std::shared_ptr<MaterialInstance> lightingMaterial);
 	void BindShadowDepthMaterial();
 	void BindLightingMaterial();
-	void SetAnimationPlaySpeed(float speed);
+	void SetAnimationPlaySpeed(Float32 speed);
 
 	virtual void CheckWhetherNeedClip(std::shared_ptr<Camera> camera) final;
 	virtual void Draw() final;
@@ -66,17 +66,17 @@ protected:
 
 	struct MaterialData
 	{
-		int ModelBlockID;
-		int ViewBlockID;
-		int ModelMatrixID;
-		int ModelMatrix_ITID;
-		int ModelMatrix_IT_PreID;
-		int ModelMatrix_PreID;
-		int ViewMatrixID;
-		int ViewMatrix_PreID;
-		int ProjectMatrixID;
-		int ProjectMatrix_PreID;
-		int ViewPositionID;
+		Int32 ModelBlockID;
+		Int32 ViewBlockID;
+		Int32 ModelMatrixID;
+		Int32 ModelMatrix_ITID;
+		Int32 ModelMatrix_IT_PreID;
+		Int32 ModelMatrix_PreID;
+		Int32 ViewMatrixID;
+		Int32 ViewMatrix_PreID;
+		Int32 ProjectMatrixID;
+		Int32 ProjectMatrix_PreID;
+		Int32 ViewPositionID;
 
 		MaterialData()
 		{
@@ -101,7 +101,7 @@ protected:
 	std::vector<std::shared_ptr<ModelNode>> RenderGroup;
 	std::vector<std::shared_ptr<ModelNode>> NodeGroup;
 	std::vector<std::shared_ptr<ModelMesh>> MeshGroup;
-	void LoadFromAssetWithAssimp(std::string folderPath, std::string fileName, glm::vec3 scale = glm::vec3(1.0, 1.0, 1.0), bool bPackToOneMesh = false);
-	void AddNode(const aiScene* scene, aiNode* node, glm::mat4 parentTransformMatrix);
+	void LoadFromAssetWithAssimp(std::string folderPath, std::string fileName, Vector3f scale = Vector3f(1.0, 1.0, 1.0), Bool bPackToOneMesh = false);
+	void AddNode(const aiScene* scene, aiNode* node, Mat4f parentTransformMatrix);
 	Assimp::Importer import;
 };

@@ -1,9 +1,7 @@
 #pragma once
 
 #include <float.h>
-#include <glm.hpp>
-#include <gtc/matrix_transform.hpp>
-#include <gtc/type_ptr.hpp>
+#include "TypeDefine.h"
 
 enum HitState
 {
@@ -21,21 +19,21 @@ public:
 	~SphereBox();
  
 	void Reset();
-	bool bOutOfCamera(glm::mat4 ModelMatrix, glm::mat4 VPMatrix, float scale);
+	Bool bOutOfCamera(Mat4f ModelMatrix, Mat4f VPMatrix, Float32 scale);
 
-	SphereBox& operator+= (const glm::vec3& newVertex);
+	SphereBox& operator+= (const Vector3f& newVertex);
 
-	glm::vec3 GetCenterPointLocal();
-	float GetRadius();
+	Vector3f GetCenterPointLocal();
+	Float32 GetRadius();
 
 private:
-	glm::vec4 ClipPlanesLocal[6];
+	Vector4f ClipPlanesLocal[6];
 
-	glm::vec4 PointMin;
-	glm::vec4 PointMax;
-	glm::vec4 CenterLocal;
-	float Radius;
-	float Height;
+	Vector4f PointMin;
+	Vector4f PointMax;
+	Vector4f CenterLocal;
+	Float32 Radius;
+	Float32 Height;
 };
 
 
@@ -79,36 +77,36 @@ public:
 	RectBox();
 	~RectBox();
 
-	void UpdateBoxModel(glm::uint32 vertexNum, glm::uint8 * pointPtr, glm::uint8 stride);
-	//void UpdateBoxWorld(glm::mat4 & ModelMatrix);
-	//void CreateBoxFromCornerWorld(float Xmin, float Xmax, float Ymin, float Ymax, float Zmin, float Zmax);
-	bool NeedClipFromObjSpace(glm::mat4 & MVP_Matrix);
-	//bool NeedClipFromWorldSpace(glm::mat4 & VP_Matrix);
-	//int HitBox(RectBox & Box);
-	//bool CenterInsideBoxWorldSpace(RectBox & Box);
+	void UpdateBoxModel(UInt32 vertexNum, UInt8 * pointPtr, UInt8 stride);
+	//void UpdateBoxWorld(Mat4f & ModelMatrix);
+	//void CreateBoxFromCornerWorld(Float32 Xmin, Float32 Xmax, Float32 Ymin, Float32 Ymax, Float32 Zmin, Float32 Zmax);
+	Bool NeedClipFromObjSpace(Mat4f & MVP_Matrix);
+	//Bool NeedClipFromWorldSpace(Mat4f & VP_Matrix);
+	//Int32 HitBox(RectBox & Box);
+	//Bool CenterInsideBoxWorldSpace(RectBox & Box);
 
-	RectBox& operator+= (const glm::vec3& newVertex);
+	RectBox& operator+= (const Vector3f& newVertex);
 
-	glm::vec3 GetCenterPointLocal();
-	glm::vec3 GetBoundMin();
-	glm::vec3 GetBoundMax();
-	float GetLength();
-	float GetWidth();
-	float GetHeight();
+	Vector3f GetCenterPointLocal();
+	Vector3f GetBoundMin();
+	Vector3f GetBoundMax();
+	Float32 GetLength();
+	Float32 GetWidth();
+	Float32 GetHeight();
 
 private:
-	glm::vec4 CenterLocal;
-	glm::vec3 BoxSize;
+	Vector4f CenterLocal;
+	Vector3f BoxSize;
 
-	//glm::vec4 CenterWorld;
-	glm::vec4 pointCornersModel[8];
-	glm::vec4 clipPlaneModel[6];
+	//Vector4f CenterWorld;
+	Vector4f pointCornersModel[8];
+	Vector4f clipPlaneModel[6];
 
-	glm::vec4 PointMin = glm::vec4(FLT_MAX, FLT_MAX, FLT_MAX, 1.0);
-	glm::vec4 PointMax = glm::vec4(-FLT_MAX, -FLT_MAX, -FLT_MAX, 1.0);
+	Vector4f PointMin = Vector4f(FLT_MAX, FLT_MAX, FLT_MAX, 1.0);
+	Vector4f PointMax = Vector4f(-FLT_MAX, -FLT_MAX, -FLT_MAX, 1.0);
 
-	//glm::vec4 pointCornersWorld[8];
-	//glm::vec4 clipPlaneWorld[6];
+	//Vector4f pointCornersWorld[8];
+	//Vector4f clipPlaneWorld[6];
 	void createCornerPointsModel();
 	//void createCornerPointsWorld();
 };

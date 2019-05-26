@@ -131,7 +131,6 @@
     <ClInclude Include="..\mFunctionTools\Include\BufferManager.h" />
     <ClInclude Include="..\mFunctionTools\Include\Camera.h" />
     <ClInclude Include="..\mFunctionTools\Include\DeferRenderPipeline.h" />
-    <ClInclude Include="..\mFunctionTools\Include\Framebuffer2D.h" />
     <ClInclude Include="..\mFunctionTools\Include\GlobalPram.h" />
     <ClInclude Include="..\mFunctionTools\Include\Light.h" />
     <ClInclude Include="..\mFunctionTools\Include\Material.h" />
@@ -146,6 +145,7 @@
     <ClInclude Include="..\mFunctionTools\Include\SystemTextures.h" />
     <ClInclude Include="..\mFunctionTools\Include\Texture.h" />
     <ClInclude Include="..\mFunctionTools\Include\Transform.h" />
+    <ClInclude Include="..\mFunctionTools\Include\TypeDefine.h" />
     <ClInclude Include="..\mFunctionTools\Include\Util.h" />
     <ClInclude Include="ConstructScene.h" />
   </ItemGroup>
@@ -154,7 +154,6 @@
     <ClCompile Include="..\mFunctionTools\Source\BufferManager.cpp" />
     <ClCompile Include="..\mFunctionTools\Source\Camera.cpp" />
     <ClCompile Include="..\mFunctionTools\Source\DeferRenderPipeline.cpp" />
-    <ClCompile Include="..\mFunctionTools\Source\Framebuffer2D.cpp" />
     <ClCompile Include="..\mFunctionTools\Source\Light.cpp" />
     <ClCompile Include="..\mFunctionTools\Source\Material.cpp" />
     <ClCompile Include="..\mFunctionTools\Source\MaterialInstance.cpp" />

@@ -56,18 +56,18 @@ public:
 	void Start();
 	void InternalUpdate();
 	void Update();
-	void Render(std::shared_ptr<Camera> camera, unsigned int typeFlags = Default);
+	void Render(std::shared_ptr<Camera> camera, UInt32 typeFlags = Default);
 	void AddObj(ObjectType type, std::shared_ptr<Object> obj);
 	void RemoveObj(std::shared_ptr<Object> obj);
-	void AddCamera(unsigned int index, std::shared_ptr<Camera> camera);
+	void AddCamera(UInt32 index, std::shared_ptr<Camera> camera);
 	void AddLight(std::shared_ptr<Light> light);
 
 	void PrepareShadowDepthMaterial();
 	void PrepareLightingMaterial();
 
-	std::shared_ptr<Camera> GetCamera(unsigned int index);
+	std::shared_ptr<Camera> GetCamera(UInt32 index);
 	std::vector<std::shared_ptr<Light>> GetAllLights();
-	std::vector<std::shared_ptr<Object>> GetObjects(unsigned int typeFlag);
+	std::vector<std::shared_ptr<Object>> GetObjects(UInt32 typeFlag);
 
 	ModeState::EditMode GetCurrentEditMode();
 	ModeState::ViewMode GetCurrentViewMode();
@@ -78,8 +78,8 @@ public:
 
 private:
 	std::vector<std::shared_ptr<Light>> SceneLights;
-	std::multimap<unsigned int, std::shared_ptr<Camera>> SceneCameras;
-	std::multimap<unsigned int, std::shared_ptr<Object>> SceneObjects;
+	std::multimap<UInt32, std::shared_ptr<Camera>> SceneCameras;
+	std::multimap<UInt32, std::shared_ptr<Object>> SceneObjects;
 
 	ModeState::EditMode CurrentEditMode;
 	ModeState::ViewMode CurrentViewMode;

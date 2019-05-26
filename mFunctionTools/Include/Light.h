@@ -19,10 +19,10 @@ public:
 	~Light();
 
 	LightType Type;
-	void SetTransform(glm::vec3 position, glm::vec3 eulerAngle);
-	void SetColor(glm::vec3 newColor);
-	void SetShadowBias(float newBias);
-	float GetShadowBias();
+	void SetTransform(Vector3f position, Vector3f eulerAngle);
+	void SetColor(Vector3f newColor);
+	void SetShadowBias(Float32 newBias);
+	Float32 GetShadowBias();
 
 	Transform* GetTransform();
 
@@ -31,9 +31,9 @@ public:
 protected:
 	Transform LightTransform;
 
-	float ShadowBias;
-	glm::vec3 Color;
-	float Intensity;
+	Float32 ShadowBias;
+	Vector3f Color;
+	Float32 Intensity;
 };
 
 
@@ -41,11 +41,11 @@ class DirectLight : public Light
 {
 public:
 	DirectLight();
-	DirectLight(glm::vec3 eulerAngles);
+	DirectLight(Vector3f eulerAngles);
 	~DirectLight();
 
-	glm::vec3 GetDirection();
-	glm::vec3 GetUpDir();
+	Vector3f GetDirection();
+	Vector3f GetUpDir();
 
 	virtual void GetShaderData(LightData &lightBuffer) final {};
 };
@@ -56,25 +56,25 @@ public:
 	PointLight();
 	~PointLight();
 
-	void SetIntensity(float newIntensity);
-	void SetAttenuationRadius(float newRadius);
-	void SetSourceRadius(float Radius);
-	void SetSoftSourceRadius(float newRadius);
-	void SetSourceLength(float newLength);
+	void SetIntensity(Float32 newIntensity);
+	void SetAttenuationRadius(Float32 newRadius);
+	void SetSourceRadius(Float32 Radius);
+	void SetSoftSourceRadius(Float32 newRadius);
+	void SetSourceLength(Float32 newLength);
 
-	float GetAttenuationRadius();
+	Float32 GetAttenuationRadius();
 
 	virtual void GetShaderData(LightData &lightBuffer);
 protected:
-	float AttenuationRadius;
-	float InvRadius;
-	float SourceRadius;
-	float SoftSourceRadius;
-	float SourceLength;
+	Float32 AttenuationRadius;
+	Float32 InvRadius;
+	Float32 SourceRadius;
+	Float32 SoftSourceRadius;
+	Float32 SourceLength;
 
-	float FallofExponent;
-	float SpecularScale;
-	float Brightness;
+	Float32 FallofExponent;
+	Float32 SpecularScale;
+	Float32 Brightness;
 };
 
 class SpotLight : public PointLight
@@ -83,22 +83,22 @@ public:
 	SpotLight();
 	~SpotLight();
 
-	glm::vec3 GetDirection();
-	glm::vec3 GetUpDir();
+	Vector3f GetDirection();
+	Vector3f GetUpDir();
 	
-	void SetInnerConeAngle(float Degree);
-	void SetOuterConeAngle(float Degree);
+	void SetInnerConeAngle(Float32 Degree);
+	void SetOuterConeAngle(Float32 Degree);
 	
-	float GetOutConeAngle();
+	Float32 GetOutConeAngle();
 
 	virtual void GetShaderData(LightData &lightBuffer) final;
 
 private:
-	float CosOuterCone;
-	float CosInnerCone;
-	float InvCosConeDifference;
+	Float32 CosOuterCone;
+	Float32 CosInnerCone;
+	Float32 InvCosConeDifference;
 	
-	float InnerConeAngle;
-	float OuterConeAngle;
+	Float32 InnerConeAngle;
+	Float32 OuterConeAngle;
 };
 

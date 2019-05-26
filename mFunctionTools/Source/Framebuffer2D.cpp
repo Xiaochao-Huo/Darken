@@ -35,7 +35,7 @@ bool Framebuffer2D::attachBuffer(   unsigned char buffer,
 {
     if(bufferIsValid(buffer))
     {
-        unsigned int *textureHandle = getTextureHandle(buffer);
+        UInt32 *textureHandle = getTextureHandle(buffer);
         GLenum attachment = getGLAttachment(buffer);
 	
 		if (!glIsTexture(*textureHandle))
@@ -164,7 +164,7 @@ bool Framebuffer2D::bufferIsValid(unsigned char buffer)
 		    buffer == FBO_DEPTH_STENCIL;
 }
 
-unsigned int *Framebuffer2D::getTextureHandle(unsigned char buffer)
+UInt32 *Framebuffer2D::getTextureHandle(unsigned char buffer)
 {
     buffer = clamp(buffer,0,FBO_COUNT-1);
     return &bufferHandle[buffer];
